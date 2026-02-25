@@ -1,10 +1,12 @@
-import Database from 'better-sqlite3';
+import initSqlJs, { Database } from 'sql.js';
 import path from 'path';
 import fs from 'fs';
-import { ChangeRecord, ProjectMetadata } from '../types';
+import { ProjectMetadata } from '../types';
 
 export class WatcherDatabase {
-  private db: Database.Database;
+  private db: Database | null = null;
+  private dbPath: string;
+  private initialized: boolean = false;
 
   constructor(projectPath: string = process.cwd()) {
     const dbDir = path.join(projectPath, '.watcher');
@@ -12,14 +14,24 @@ export class WatcherDatabase {
       fs.mkdirSync(dbDir, { recursive: true });
     }
     
-    const dbPath = path.join(dbDir, 'watcher.db');
-    this.db = new Database(dbPath);
-    this.initialize();
+    this.dbPath = path.join(dbDir, 'watcher.db');
   }
 
-  private initialize(): void {
-    // Create projects table
-    this.db.exec(`
+  async initialize(): Promise<void> {
+    if (this.initialized) return;
+
+    const SQL = await initSqlJs();
+    
+    // Load existing database or create new one
+    if (fs.existsSync(this.dbPath)) {
+      const buffer = fs.readFileSync(this.dbPath);
+      this.db = new SQL.Database(buffer);
+    } else {
+      this.db = new SQL.Database();
+    }
+
+    // Create tables
+    this.db.run(`
       CREATE TABLE IF NOT EXISTS projects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -31,8 +43,7 @@ export class WatcherDatabase {
       )
     `);
 
-    // Create changes table
-    this.db.exec(`
+    this.db.run(`
       CREATE TABLE IF NOT EXISTS changes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         project_id INTEGER NOT NULL,
@@ -48,8 +59,7 @@ export class WatcherDatabase {
       )
     `);
 
-    // Create file_changes table
-    this.db.exec(`
+    this.db.run(`
       CREATE TABLE IF NOT EXISTS file_changes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         change_id INTEGER NOT NULL,
@@ -61,58 +71,101 @@ export class WatcherDatabase {
       )
     `);
 
-    // Create indexes
-    this.db.exec(`
+    this.db.run(`
       CREATE INDEX IF NOT EXISTS idx_changes_project_timestamp 
       ON changes(project_id, timestamp)
     `);
 
-    this.db.exec(`
+    this.db.run(`
       CREATE INDEX IF NOT EXISTS idx_file_changes_change 
       ON file_changes(change_id)
     `);
+
+    this.initialized = true;
+    this.save();
+  }
+
+  private save(): void {
+    if (!this.db) return;
+    const data = this.db.export();
+    fs.writeFileSync(this.dbPath, data);
   }
 
   saveProject(metadata: Omit<ProjectMetadata, 'createdAt' | 'updatedAt'>): number {
-    const stmt = this.db.prepare(`
-      INSERT INTO projects (name, path, tech_stack, architecture)
-      VALUES (?, ?, ?, ?)
-      ON CONFLICT(path) DO UPDATE SET
-        name = excluded.name,
-        tech_stack = excluded.tech_stack,
-        architecture = excluded.architecture,
-        updated_at = CURRENT_TIMESTAMP
-    `);
+    if (!this.db) throw new Error('Database not initialized');
 
-    const result = stmt.run(
-      metadata.name,
-      metadata.path,
-      JSON.stringify(metadata.techStack),
-      metadata.architecture
+    // Check if project exists
+    const existing = this.db.exec(
+      'SELECT id FROM projects WHERE path = ?',
+      [metadata.path]
     );
 
-    return result.lastInsertRowid as number;
+    if (existing.length > 0 && existing[0].values.length > 0) {
+      // Update existing
+      this.db.run(
+        `UPDATE projects SET 
+          name = ?, 
+          tech_stack = ?, 
+          architecture = ?,
+          updated_at = CURRENT_TIMESTAMP
+         WHERE path = ?`,
+        [
+          metadata.name,
+          JSON.stringify(metadata.techStack),
+          metadata.architecture,
+          metadata.path,
+        ]
+      );
+      this.save();
+      return existing[0].values[0][0] as number;
+    } else {
+      // Insert new
+      this.db.run(
+        'INSERT INTO projects (name, path, tech_stack, architecture) VALUES (?, ?, ?, ?)',
+        [
+          metadata.name,
+          metadata.path,
+          JSON.stringify(metadata.techStack),
+          metadata.architecture,
+        ]
+      );
+      this.save();
+      
+      const result = this.db.exec('SELECT last_insert_rowid()');
+      return result[0].values[0][0] as number;
+    }
   }
 
   getProject(projectPath: string): ProjectMetadata | null {
-    const stmt = this.db.prepare(`
-      SELECT * FROM projects WHERE path = ?
-    `);
+    if (!this.db) throw new Error('Database not initialized');
 
-    const row = stmt.get(projectPath) as any;
-    if (!row) return null;
+    const result = this.db.exec(
+      'SELECT * FROM projects WHERE path = ?',
+      [projectPath]
+    );
+
+    if (result.length === 0 || result[0].values.length === 0) {
+      return null;
+    }
+
+    const row = result[0].values[0];
+    const columns = result[0].columns;
 
     return {
-      name: row.name,
-      path: row.path,
-      techStack: JSON.parse(row.tech_stack || '[]'),
-      architecture: row.architecture,
-      createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
+      name: row[columns.indexOf('name')] as string,
+      path: row[columns.indexOf('path')] as string,
+      techStack: JSON.parse((row[columns.indexOf('tech_stack')] as string) || '[]'),
+      architecture: row[columns.indexOf('architecture')] as string,
+      createdAt: new Date(row[columns.indexOf('created_at')] as string),
+      updatedAt: new Date(row[columns.indexOf('updated_at')] as string),
     };
   }
 
   close(): void {
-    this.db.close();
+    if (this.db) {
+      this.save();
+      this.db.close();
+      this.db = null;
+    }
   }
 }

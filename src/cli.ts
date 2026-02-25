@@ -47,12 +47,5 @@ program
   .option('--metric <name>', 'Specific metric to display')
   .action(insightsCommand);
 
-// Error handling
-program.exitOverride();
-
-try {
-  program.parse(process.argv);
-} catch (error: any) {
-  console.error(chalk.red('Error:'), error.message);
-  process.exit(1);
-}
+// Parse command line arguments
+program.parse(process.argv);

@@ -100,6 +100,7 @@ export async function initCommand(options: CommandOptions): Promise<void> {
     // Initialize database
     logger.startSpinner('Initializing database...');
     const db = new WatcherDatabase(projectPath);
+    await db.initialize();
     db.saveProject({
       name: projectName,
       path: projectPath,
