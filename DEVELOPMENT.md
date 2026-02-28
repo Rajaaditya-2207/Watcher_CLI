@@ -1,74 +1,64 @@
-# Watcher CLI - Development Guide
+# Watcher CLI — Development Guide
 
-## Phase 1: Core Infrastructure ✅
+## Project Status: All Phases Complete
 
-This phase implements the foundational components of Watcher CLI.
+---
 
-### Completed Features
-
-#### 1. CLI Framework Setup
-- ✅ Commander.js integration for command parsing
-- ✅ TypeScript configuration
-- ✅ Project structure setup
-
-#### 2. Configuration Management
-- ✅ ConfigManager class for reading/writing `.watcherrc.json`
-- ✅ Default configuration with sensible defaults
-- ✅ Interactive configuration during `init`
-
-#### 3. Database Initialization
-- ✅ SQLite3 database setup
-- ✅ Schema creation (projects, changes, file_changes tables)
-- ✅ Database stored in `.watcher/watcher.db`
-
-#### 4. File System Monitoring
-- ✅ FileMonitor class using chokidar
-- ✅ Real-time file change detection
-- ✅ Ignore patterns support
-- ✅ Event emission for file changes
-
-#### 5. Git Integration
-- ✅ GitService class for git operations
-- ✅ Repository detection
-- ✅ Branch information
-- ✅ Git status parsing
-- ✅ Diff retrieval
-
-### Project Structure
+## Architecture
 
 ```
-watcher-cli/
-├── src/
-│   ├── cli.ts                 # Main CLI entry point
-│   ├── index.ts               # Public API exports
-│   ├── types/
-│   │   └── index.ts           # TypeScript interfaces
-│   ├── commands/
-│   │   ├── init.ts            # Init command
-│   │   ├── watch.ts           # Watch command
-│   │   ├── report.ts          # Report command (stub)
-│   │   └── insights.ts        # Insights command (stub)
-│   ├── config/
-│   │   └── ConfigManager.ts   # Configuration management
-│   ├── database/
-│   │   └── Database.ts        # SQLite database wrapper
-│   ├── monitor/
-│   │   └── FileMonitor.ts     # File system monitoring
-│   ├── git/
-│   │   └── GitService.ts      # Git integration
-│   └── utils/
-│       └── logger.ts          # Logging utilities
-├── dist/                      # Compiled JavaScript (generated)
-├── package.json
-├── tsconfig.json
-└── .gitignore
+src/
+  cli.ts                          Entry point with interactive flow
+  index.ts                        Public exports
+  ui/
+    banner.ts                     Neon green ASCII art banner
+    onboarding.ts                 First-run setup (provider, API key, model)
+  ai/
+    AIProvider.ts                 Abstract provider base class
+    AIProviderFactory.ts          Factory pattern for provider creation
+    OpenRouterProvider.ts         OpenRouter API integration
+    GroqProvider.ts               Groq API integration
+    BedrockProvider.ts            AWS Bedrock structure
+    SemanticAnalyzer.ts           AI-powered code analysis engine
+    modelFetcher.ts               Dynamic model listing from provider APIs
+  commands/
+    init.ts                       Project initialization
+    watch.ts                      File monitoring with AI analysis
+    report.ts                     Report generation (md/json)
+    insights.ts                   Analytics and debt tracking
+    config.ts                     Configuration management
+  modes/
+    chatMode.ts                   Interactive AI chat REPL
+    chatTools.ts                  Repository inspection tools
+    sessionManager.ts             Conversation and token tracking
+  config/
+    ConfigManager.ts              Configuration file management
+  credentials/
+    CredentialManager.ts          AES-256-CBC encrypted key storage
+  database/
+    Database.ts                   SQLite with full CRUD operations
+  documentation/
+    ProgressGenerator.ts          PROGRESS.md auto-generation
+    ChangelogGenerator.ts         CHANGELOG.md auto-generation
+  analytics/
+    AnalyticsEngine.ts            Velocity and productivity metrics
+    TechnicalDebtTracker.ts       Code health scanning
+  git/
+    GitService.ts                 Git operations wrapper
+  monitor/
+    FileMonitor.ts                File system change detection
+  types/
+    index.ts                      Core TypeScript interfaces
+    ai.ts                         AI-related type definitions
+  utils/
+    logger.ts                     Professional terminal output
 ```
 
-## Installation & Setup
+## Installation and Setup
 
 ### Prerequisites
 - Node.js >= 16.0.0
-- Git (optional, but recommended)
+- Git (recommended)
 
 ### Development Installation
 
@@ -86,42 +76,40 @@ npm link
 watcher --version
 ```
 
-### Usage
+## Usage
 
-#### Initialize Watcher in a Project
+### Interactive Mode (Recommended)
 
 ```bash
-cd your-project
+# Run bare watcher for interactive flow
+watcher
+```
+
+This will:
+1. Display neon green ASCII banner
+2. If first run: prompt for AI provider, API key, and model selection
+3. Present mode selection: Chat Mode or Watch Mode
+
+### Direct Commands
+
+```bash
+# Initialize project manually
 watcher init
-```
 
-This will:
-1. Create `.watcherrc.json` configuration file
-2. Initialize `.watcher/watcher.db` database
-3. Prompt for AI provider and settings
-
-#### Start Watching
-
-```bash
+# Start file monitoring directly
 watcher watch
-```
-
-This will:
-1. Monitor file changes in real-time
-2. Display file add/change/delete events
-3. Show git diff in verbose mode
-
-#### Options
-
-```bash
-# Watch with verbose output
 watcher watch --verbose
 
-# Watch with custom interval
-watcher watch --interval=3000
+# Generate reports
+watcher report --format md
+watcher report --format json --since 2024-01-01 --output report.json
 
-# Force re-initialization
-watcher init --force
+# View analytics
+watcher insights --period week
+watcher insights --period month --metric debt
+
+# Manage configuration
+watcher config
 ```
 
 ## Development Commands
@@ -142,38 +130,6 @@ npm run lint
 # Format code
 npm run format
 ```
-
-## Testing the CLI
-
-### Test Init Command
-
-```bash
-# Create a test directory
-mkdir test-project
-cd test-project
-git init
-
-# Initialize Watcher
-watcher init
-
-# Check created files
-ls -la .watcherrc.json
-ls -la .watcher/watcher.db
-```
-
-### Test Watch Command
-
-```bash
-# Start watching
-watcher watch --verbose
-
-# In another terminal, make changes
-echo "console.log('test');" > test.js
-echo "more changes" >> test.js
-rm test.js
-```
-
-You should see real-time notifications of file changes.
 
 ## Configuration File
 
@@ -206,57 +162,77 @@ The `.watcherrc.json` file is created during initialization:
 
 ## Database Schema
 
-### Projects Table
-- `id`: Primary key
-- `name`: Project name
-- `path`: Project path (unique)
-- `tech_stack`: JSON array of technologies
-- `architecture`: Architecture pattern
-- `created_at`: Creation timestamp
-- `updated_at`: Last update timestamp
+### projects
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PK | Auto-increment |
+| name | TEXT | Project name |
+| path | TEXT UNIQUE | Project path |
+| tech_stack | TEXT | JSON array |
+| architecture | TEXT | Architecture pattern |
+| created_at | DATETIME | Creation timestamp |
+| updated_at | DATETIME | Last update |
 
-### Changes Table
-- `id`: Primary key
-- `project_id`: Foreign key to projects
-- `timestamp`: Change timestamp
-- `category`: feature | fix | refactor | docs
-- `summary`: Change summary
-- `description`: Detailed description
-- `impact`: low | medium | high
-- `lines_added`: Lines added count
-- `lines_removed`: Lines removed count
-- `files_changed`: Number of files changed
+### changes
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PK | Auto-increment |
+| project_id | INTEGER FK | References projects |
+| timestamp | DATETIME | Change timestamp |
+| category | TEXT | feature, fix, refactor, docs, style, test |
+| summary | TEXT | AI-generated summary |
+| description | TEXT | Technical details |
+| impact | TEXT | low, medium, high |
+| lines_added | INTEGER | Lines added |
+| lines_removed | INTEGER | Lines removed |
+| files_changed | INTEGER | File count |
 
-### File Changes Table
-- `id`: Primary key
-- `change_id`: Foreign key to changes
-- `file_path`: Relative file path
-- `change_type`: added | modified | deleted
-- `lines_added`: Lines added
-- `lines_removed`: Lines removed
+### file_changes
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PK | Auto-increment |
+| change_id | INTEGER FK | References changes |
+| file_path | TEXT | Relative file path |
+| change_type | TEXT | added, modified, deleted |
+| lines_added | INTEGER | Lines added |
+| lines_removed | INTEGER | Lines removed |
 
-## Next Steps: Phase 2
+### technical_debt
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PK | Auto-increment |
+| project_id | INTEGER FK | References projects |
+| type | TEXT | large_file, todo_comment, etc. |
+| severity | TEXT | low, medium, high |
+| file_path | TEXT | Relative file path |
+| description | TEXT | Issue description |
+| detected_at | DATETIME | Detection timestamp |
+| resolved_at | DATETIME | Resolution timestamp |
+| status | TEXT | open, resolved |
 
-Phase 2 will implement:
-- AI provider integration (OpenRouter, AWS Bedrock, Groq)
-- Semantic code analysis
-- API key management with Keytar
-- Prompt engineering for code understanding
+### metrics
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PK | Auto-increment |
+| project_id | INTEGER FK | References projects |
+| timestamp | DATETIME | Snapshot timestamp |
+| total_files | INTEGER | File count |
+| total_lines | INTEGER | Line count |
+| test_coverage | REAL | Coverage percentage |
+| code_duplication | REAL | Duplication percentage |
+| complexity_avg | REAL | Average complexity |
+| debt_count | INTEGER | Open debt items |
 
 ## Troubleshooting
 
 ### "Command not found: watcher"
-
 Run `npm link` in the project directory to create a global symlink.
 
 ### "Watcher is not initialized"
-
-Run `watcher init` in your project directory first.
+Run `watcher init` or simply run `watcher` to trigger the onboarding flow.
 
 ### Database locked error
-
 Close any other Watcher instances running in the same project.
 
-## Contributing
-
-Phase 1 is complete! Ready to move to Phase 2 for AI integration.
+### AI analysis not working
+Run `watcher config` to verify your API key is set and test the connection.

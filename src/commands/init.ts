@@ -8,7 +8,7 @@ import path from 'path';
 
 export async function initCommand(options: CommandOptions): Promise<void> {
   try {
-    logger.header('🚀 Initializing Watcher');
+    logger.header('Initializing Watcher');
 
     const projectPath = process.cwd();
     const projectName = path.basename(projectPath);
@@ -111,8 +111,8 @@ export async function initCommand(options: CommandOptions): Promise<void> {
     logger.stopSpinner(true, 'Database initialized');
 
     logger.box(
-      `Watcher initialized successfully!\n\nNext steps:\n  1. Configure your API key (coming soon)\n  2. Run: watcher watch\n  3. Start coding!`,
-      '✨ Success'
+      `Watcher initialized successfully.\n\nNext steps:\n  1. Run: watcher config    (set your API key)\n  2. Run: watcher watch     (start monitoring)\n  3. Start coding.`,
+      'Setup Complete'
     );
   } catch (error: any) {
     logger.error(`Initialization failed: ${error.message}`);

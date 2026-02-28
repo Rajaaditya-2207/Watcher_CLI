@@ -1,15 +1,15 @@
-# Watcher - Requirements Document
+# Watcher — Requirements Document
 
 ## Project Overview
 
 **Team Name:** KREONYX  
 **Team Leader:** Rajaaditya. R  
 **Hackathon:** AWS AI for Bharat Hackathon  
-**Track:** Track 1 - AI for Learning & Developer Productivity
+**Track:** Track 1 — AI for Learning and Developer Productivity
 
 ## Executive Summary
 
-Watcher is a CLI-based development observer that provides semantic, real-time understanding of projects by translating technical code changes into human-readable narratives. It functions as a "silent technical writer" that auto-generates PROGRESS.md files and changelogs, reducing manual documentation time by up to 80%.
+Watcher is a CLI-based development observer that provides semantic, real-time understanding of projects by translating technical code changes into human-readable narratives. It functions as a silent technical writer that auto-generates PROGRESS.md files and changelogs, reducing manual documentation time by up to 80%.
 
 ## Problem Statement
 
@@ -48,273 +48,258 @@ Watcher is a CLI tool that monitors codebases in real-time, providing:
 - AI-optimized context exports
 - Technical debt tracking
 - Privacy-first architecture with BYOK (Bring Your Own Key)
+- Interactive Chat Mode for repository analysis
 
 ## Unique Differentiators
 
-1. **Semantic Observation**
-   - High-level understanding of development progress
-   - Translates raw code diffs into meaningful feature updates
-
-2. **Gap Analysis**
-   - AI-powered comparison against reference repositories
-   - Identifies missing elements and prioritizes improvements
-
-3. **AI Context Optimization**
-   - Generates machine-readable summaries for AI assistants
-   - Eliminates repetitive prompting
-
-4. **Privacy & Control**
-   - BYOK model ensures code remains local
-   - User controls data and API costs
-
-5. **Universal Utility**
-   - Supports beginners to professional teams
-   - Learning validation and automated documentation
+1. **Semantic Observation** — High-level understanding of development progress; translates raw code diffs into meaningful feature updates
+2. **Interactive AI Agent** — Chat Mode allows developers to ask questions about their codebase, git status, and project structure
+3. **Dynamic Model Selection** — Fetches available models from provider APIs at runtime; users choose their preferred model
+4. **AI Context Optimization** — Generates machine-readable summaries for AI assistants; eliminates repetitive prompting
+5. **Privacy and Control** — BYOK model ensures code remains local; user controls data and API costs
 
 ## Functional Requirements
 
 ### FR1: Core CLI Functionality
 
-#### FR1.1: Intelligent Initialization
-- **Command:** `watcher init`
+#### FR1.1: Interactive Onboarding
+- **Trigger:** First run of `watcher` with no existing configuration
 - **Requirements:**
-  - Automatically scan project structure
-  - Detect tech stack (languages, frameworks)
-  - Identify architectural patterns (MVC, microservices, etc.)
-  - Assess current feature completion status
-  - Generate initial configuration file
+  - Select AI provider (OpenRouter, Groq, AWS Bedrock)
+  - Enter API key (stored with AES-256-CBC encryption)
+  - Fetch and display available models from provider API
+  - Select preferred model from fetched list
+  - Auto-initialize database and configuration
+- **Status:** IMPLEMENTED
 
-#### FR1.2: Continuous Monitoring
+#### FR1.2: Dual Operating Modes
+- **Trigger:** Running `watcher` after setup
+- **Requirements:**
+  - **Chat Mode:** Interactive REPL to talk to AI about the repository
+  - **Watch Mode:** Automatic file monitoring and progress logging
+  - Mode selection via interactive prompt
+- **Status:** IMPLEMENTED
+
+#### FR1.3: Continuous Monitoring
 - **Command:** `watcher watch`
 - **Requirements:**
   - Real-time file system monitoring
   - Git change tracking
-  - Categorize changes into: features, fixes, refactors
+  - AI-powered change categorization (feature, fix, refactor, docs, style, test)
   - Automated impact assessment
-  - Smart change detection (ignore whitespace/formatting)
-  - Group related modifications into logical units
+  - Database persistence of analyzed changes
+  - Auto-update PROGRESS.md and CHANGELOG.md
+- **Status:** IMPLEMENTED
 
-#### FR1.3: Semantic Auto-Documentation
+#### FR1.4: Semantic Auto-Documentation
 - **Requirements:**
   - Generate and maintain PROGRESS.md file
-  - Update documentation in real-time as code changes
+  - Generate and maintain CHANGELOG.md file
+  - Update documentation automatically as code changes
   - Translate technical changes into human-readable narratives
-  - Act as "silent technical writer"
-  - Support team collaboration
+- **Status:** IMPLEMENTED
 
-#### FR1.4: Flexible Reporting
+#### FR1.5: Flexible Reporting
 - **Command:** `watcher report`
 - **Requirements:**
-  - Export project status in multiple formats:
-    - Markdown
-    - JSON
-    - Slack-formatted updates
-  - Filterable history by timeframe
-  - Customizable report templates
+  - Export in Markdown and JSON formats
+  - Filterable history by date
+  - File output support
+  - Summary statistics, category breakdown, file hotspots, technical debt
+- **Status:** IMPLEMENTED
 
-### FR2: AI Optimization & Context Export
+### FR2: AI Integration
 
-#### FR2.1: AI Context Generation
+#### FR2.1: Multi-Provider Support
 - **Requirements:**
-  - Generate machine-readable project summaries
-  - Optimize for AI coding assistants (Claude, Cursor)
-  - One-command context export
-  - Universal Markdown format
-  - Include architectural patterns and current state
+  - OpenRouter (Claude, GPT-4, Gemini, Llama)
+  - Groq (Llama, Mixtral)
+  - AWS Bedrock (Claude, Titan)
+  - Abstract provider interface with factory pattern
+  - Dynamic model fetching from provider APIs
+- **Status:** IMPLEMENTED
 
 #### FR2.2: Semantic Code Understanding
 - **Requirements:**
-  - Use Claude AI for code analysis
-  - Recognize architectural patterns
-  - Go beyond syntax to understand intent
-  - Translate technical changes to narratives
+  - AI-powered analysis of code changes
+  - Category classification (feature, fix, refactor, docs, style, test)
+  - Impact assessment (low, medium, high)
+  - Affected area identification
+  - JSON response parsing with fallback handling
+- **Status:** IMPLEMENTED
 
-### FR3: Insights & Technical Health
+#### FR2.3: Interactive Chat Agent
+- **Requirements:**
+  - Readline-based interactive REPL
+  - System prompt with full repository context (git status, file list, project summary)
+  - Direct tool commands (status, diff, files, cat, summary)
+  - Session management with conversation history
+  - Token usage tracking
+- **Status:** IMPLEMENTED
+
+### FR3: Insights and Technical Health
 
 #### FR3.1: Development Analytics
 - **Command:** `watcher insights`
 - **Requirements:**
-  - Track velocity metrics
-  - Features completed over time
-  - Peak productivity hours analysis
-  - Project momentum visualization
-  - Historical trend visualization
+  - Velocity metrics (changes/day, lines added/removed)
+  - Category breakdown with percentages
+  - Impact distribution
+  - File hotspot detection
+  - ASCII activity timeline visualization
+  - Configurable time periods (day, week, month)
+- **Status:** IMPLEMENTED
 
-#### FR3.2: Automated Technical Debt Tracking
+#### FR3.2: Technical Debt Tracking
 - **Requirements:**
-  - Identify TODO counts
-  - Detect code duplication
-  - Flag large files
-  - Check missing test coverage
-  - Track outdated dependencies
-  - Trend reporting over time
-  - Proactive issue identification
+  - Large file detection (>500 lines)
+  - TODO/FIXME/HACK comment scanning
+  - Database persistence of debt items
+  - Severity classification (low, medium, high)
+  - Open/resolved status tracking
+- **Status:** IMPLEMENTED
 
-#### FR3.3: Gap Analysis
-- **Requirements:**
-  - Compare project against reference repositories
-  - Identify missing features/patterns
-  - Prioritize improvements
-  - Support learning validation
-
-### FR4: Privacy & Security
+### FR4: Privacy and Security
 
 #### FR4.1: BYOK Architecture
 - **Requirements:**
   - Code remains strictly local
-  - Never transmit code to external servers
+  - Never transmit raw code to external servers (only semantic diffs)
   - User provides own API keys
   - User controls API costs and usage
-  - Support multiple AI providers:
-    - OpenRouter
-    - AWS Bedrock
-    - Groq
+  - Multiple AI provider support
+- **Status:** IMPLEMENTED
 
 #### FR4.2: Secure Configuration Management
 - **Requirements:**
-  - Encrypt API keys locally
-  - Secure credential storage using Keytar
-  - Customizable watch intervals
-  - Ignore patterns configuration (e.g., node_modules)
-  - Preferred AI model selection
+  - AES-256-CBC encryption for API keys
+  - Machine-specific key derivation (hostname + username)
+  - Restrictive file permissions on credential storage
+  - Customizable watch intervals and ignore patterns
+- **Status:** IMPLEMENTED
 
 ### FR5: Data Management
 
 #### FR5.1: Local Database
 - **Requirements:**
-  - SQLite3 for state management
-  - Store change history
-  - Track project timelines
-  - Performance comparisons across weeks
+  - SQLite via sql.js (pure JavaScript, no native dependencies)
+  - Five tables: projects, changes, file_changes, technical_debt, metrics
+  - Complete CRUD operations
+  - Indexed queries for performance
   - No external database dependencies
+- **Status:** IMPLEMENTED
 
 #### FR5.2: Historical Tracking
 - **Requirements:**
-  - Maintain complete change history
-  - Support time-based queries
-  - Enable trend analysis
+  - Complete change history
+  - Time-based queries (since date filter)
+  - Category and impact aggregation
+  - File hotspot analysis
   - Project timeline generation
+- **Status:** IMPLEMENTED
 
 ## Non-Functional Requirements
 
 ### NFR1: Performance
 - Real-time file monitoring with minimal latency
-- Efficient AST parsing for large codebases
-- Optimized database queries
+- Buffered change analysis (5-second debounce)
+- Indexed database queries
 - Low CPU and memory footprint
 
 ### NFR2: Usability
-- Intuitive CLI interface
+- Neon green themed terminal UI
+- Professional tone (no emojis in CLI output)
 - Interactive prompts for configuration
 - Clear error messages
-- Comprehensive help documentation
-- Terminal UI enhancements (colors, spinners, boxes)
+- Table-formatted analytics output
 
 ### NFR3: Compatibility
 - Cross-platform support (Windows, macOS, Linux)
-- Node.js runtime
+- Node.js v16+ runtime
 - Git integration
-- GitHub MCP support
 - Standard Markdown output
 
 ### NFR4: Reliability
-- Graceful error handling
-- Automatic recovery from failures
+- Graceful error handling with fallbacks
+- Graceful shutdown on SIGINT
 - Data integrity in local database
 - Safe concurrent file operations
 
 ### NFR5: Security
-- Encrypted credential storage
-- No code transmission to external servers
-- Secure API key management
-- User-controlled data access
+- AES-256-CBC encrypted credential storage
+- No raw code transmission to external servers
+- Machine-specific encryption keys
+- Restrictive file permissions
 
 ### NFR6: Maintainability
-- Modular architecture
-- Comprehensive test coverage (Jest)
+- Modular architecture with clear separation of concerns
+- TypeScript strict mode
 - Code formatting (Prettier)
 - Linting (ESLint)
-- Git hooks (Husky)
-
-## User Personas
-
-### Persona 1: Beginner Developer ("Vibe Coder")
-- **Needs:**
-  - Learning validation
-  - Gap analysis against reference repos
-  - Understanding of what's missing
-  - Progress tracking
-- **Benefits:**
-  - 2x faster learning
-  - Clear implementation guidance
-  - Confidence in progress
-
-### Persona 2: Professional Software Engineer
-- **Needs:**
-  - Automated documentation
-  - Technical debt tracking
-  - Team collaboration
-  - Sprint planning support
-- **Benefits:**
-  - 80% reduction in documentation time
-  - Better code quality
-  - Improved team visibility
-
-### Persona 3: Development Team Lead
-- **Needs:**
-  - Project visibility
-  - Developer onboarding
-  - Sprint planning
-  - Progress reporting
-- **Benefits:**
-  - 50% faster onboarding
-  - Better sprint planning
-  - Shareable project summaries
-
-### Persona 4: AI-Assisted Developer
-- **Needs:**
-  - Context export for AI tools
-  - Better AI suggestions
-  - Reduced context repetition
-- **Benefits:**
-  - 3x better AI suggestions
-  - One-command context sharing
-  - Seamless AI integration
 
 ## Technical Requirements
 
-### TR1: Programming Language & Runtime
-- JavaScript/TypeScript
-- Node.js (LTS version)
+### TR1: Runtime and Language
+- TypeScript (strict mode)
+- Node.js v16+ (LTS)
 
-### TR2: GitHub Integration
-- GitHub MCP (Model Context Protocol)
-- Octokit REST API
+### TR2: AI Integration
+- OpenRouter API (v1)
+- Groq API (OpenAI-compatible)
+- AWS Bedrock (structural)
+- Dynamic model fetching
 
-### TR3: AI & Code Analysis
-- Claude AI integration
-- Babel Parser for AST parsing
-- TypeScript Compiler API
-- ESLint for code quality
-
-### TR4: CLI Framework
-- Commander.js for CLI
+### TR3: CLI Framework
+- Commander.js for command parsing
 - Inquirer.js for interactive prompts
-- Chalk, Ora, Boxen for UI
+- Chalk for colors (neon green theme)
+- Ora for spinners
+- Boxen for boxed output
 
-### TR5: Data Storage
-- SQLite3 for local database
-- Keytar for secure credentials
+### TR4: Data Storage
+- sql.js (pure JavaScript SQLite)
+- AES-256-CBC for credential encryption
 
-### TR6: Documentation Generation
-- Marked for Markdown parsing
-- Handlebars for templates
-- PDF-lib for report generation
+### TR5: Monitoring
+- Chokidar for file system events
+- Native Git commands for version control
 
-### TR7: Development Tools
+### TR6: Development Tools
 - Jest for testing
-- Prettier & ESLint for code quality
+- Prettier and ESLint for code quality
 - Husky for git hooks
+
+## Acceptance Criteria
+
+### AC1: Core Functionality
+- [x] `watcher` (bare) triggers interactive mode with onboarding and mode selection
+- [x] `watcher watch` monitors changes in real-time
+- [x] PROGRESS.md is auto-generated and updated
+- [x] CHANGELOG.md is auto-generated and updated
+- [x] `watcher report` exports in markdown and JSON formats
+
+### AC2: AI Integration
+- [x] Dynamic model fetching from OpenRouter and Groq APIs
+- [x] Semantic understanding produces categorized change summaries
+- [x] Chat Mode allows interactive conversation about the repository
+- [x] API keys are encrypted with AES-256-CBC
+
+### AC3: Analytics and Technical Debt
+- [x] Automated detection of large files and TODO comments
+- [x] Velocity metrics with period filtering
+- [x] File hotspot analysis
+- [x] Activity timeline visualization
+
+### AC4: Privacy and Security
+- [x] Code remains local at all times
+- [x] API keys are encrypted at rest
+- [x] User controls all costs via BYOK
+
+### AC5: Usability
+- [x] Neon green themed terminal output
+- [x] Professional tone with no emojis in CLI
+- [x] Interactive onboarding for first-run setup
+- [x] Table-formatted analytics display
 
 ## Cost Structure
 
@@ -327,25 +312,6 @@ Watcher is a CLI tool that monitors codebases in real-time, providing:
 - Users bring their own API keys
 - Direct control over spending
 
-## Business Model
-
-### Launch Phase: Free & Open Source
-- All features free forever
-- BYOK model (users provide API keys)
-- Community-driven development
-- Sustainable at $5-10/month operational cost
-
-### Future (Optional): Pro Tier
-- **Price:** $9/month
-- **Features:**
-  - Managed API keys
-  - Premium features
-  - Convenience for users who don't want BYOK
-- **Purpose:**
-  - Test market demand
-  - Validate willingness to pay
-  - No server scaling costs
-
 ## Success Metrics
 
 1. **Documentation Efficiency:** 80% reduction in manual documentation time
@@ -355,77 +321,22 @@ Watcher is a CLI tool that monitors codebases in real-time, providing:
 5. **User Adoption:** Community growth and contributions
 6. **Code Quality:** Measurable reduction in technical debt
 
-## Constraints
-
-1. **Privacy:** Code must never leave user's machine
-2. **Cost:** Must remain sustainable at low operational cost
-3. **Compatibility:** Must work with standard tools (Git, GitHub, Markdown)
-4. **Performance:** Must not slow down development workflow
-5. **Simplicity:** CLI must be intuitive and easy to use
-
-## Future Enhancements
-
-1. Integration with more AI providers
-2. Support for additional version control systems
-3. Team collaboration features
-4. IDE plugins
-5. Advanced analytics and reporting
-6. Custom rule engines for technical debt
-7. Integration with project management tools
-
-## Acceptance Criteria
-
-### AC1: Core Functionality
-- [ ] `watcher init` successfully detects tech stack and architecture
-- [ ] `watcher watch` monitors changes in real-time
-- [ ] PROGRESS.md is auto-generated and updated
-- [ ] `watcher report` exports in all specified formats
-
-### AC2: AI Integration
-- [ ] Context export works with Claude and Cursor
-- [ ] Semantic understanding produces accurate narratives
-- [ ] Gap analysis identifies missing features
-
-### AC3: Technical Debt
-- [ ] Automated detection of code issues
-- [ ] Trend reporting over time
-- [ ] Actionable recommendations
-
-### AC4: Privacy & Security
-- [ ] Code remains local at all times
-- [ ] API keys are encrypted
-- [ ] User controls all costs
-
-### AC5: Performance
-- [ ] Real-time monitoring with <1s latency
-- [ ] Minimal CPU/memory usage
-- [ ] Fast report generation
-
-## Dependencies
-
-1. Node.js ecosystem
-2. Git installation
-3. User-provided AI API keys
-4. GitHub access (for MCP features)
-
-## Risks & Mitigations
+## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | AI API costs too high | High | BYOK model gives users control |
-| Performance issues on large repos | Medium | Optimized parsing, ignore patterns |
-| User adoption challenges | Medium | Strong documentation, community building |
-| API provider changes | Low | Support multiple providers |
-| Security vulnerabilities | High | Regular audits, encrypted storage |
+| Performance issues on large repos | Medium | Optimized parsing, ignore patterns, debounce |
+| User adoption challenges | Medium | Strong documentation, onboarding flow |
+| API provider changes | Low | Abstract provider interface, multiple providers |
+| Security vulnerabilities | High | AES-256-CBC encryption, no code transmission |
 
-## Timeline (Estimated)
+## Timeline
 
-- **Phase 1 (Weeks 1-2):** Core CLI and file monitoring
-- **Phase 2 (Weeks 3-4):** AI integration and semantic analysis
-- **Phase 3 (Weeks 5-6):** Documentation generation and reporting
-- **Phase 4 (Weeks 7-8):** Technical debt tracking and analytics
-- **Phase 5 (Weeks 9-10):** Testing, polish, and documentation
-
-## Conclusion
-
-Watcher addresses critical pain points in modern software development by automating documentation, optimizing AI assistance, and tracking technical health—all while maintaining complete privacy and user control through its innovative BYOK architecture.
+| Phase | Scope | Status |
+|-------|-------|--------|
+| Phase 1 | Core Infrastructure (CLI, config, DB, monitoring, git) | COMPLETE |
+| Phase 2 | AI Integration (providers, analysis, credentials) | COMPLETE |
+| Phase 3 | Documentation Generation (PROGRESS.md, CHANGELOG.md, reports) | COMPLETE |
+| Phase 4 | Analytics and Insights (velocity, debt tracking) | COMPLETE |
+| Phase 5 | Interactive Mode System (onboarding, chat, watch modes) | COMPLETE |
