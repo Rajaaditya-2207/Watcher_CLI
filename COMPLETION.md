@@ -60,6 +60,16 @@
 | Session Management | Conversation history and token usage tracking |
 | Chat Tools | Git status, diff, file listing, file reading, project summary |
 
+### Background Daemon Service
+
+| Component | Implementation |
+|-----------|---------------|
+| Global Registry | Project tracking at ~/.watcher/projects.json |
+| Daemon Process | Single background Node.js process for all projects |
+| Auto-Start | Windows Task Scheduler, macOS LaunchAgent, Linux systemd |
+| Daemon Commands | start, stop, status, logs, enable, disable |
+| Init Integration | Auto-register project + daemon prompt |
+
 ---
 
 ## Architecture
@@ -139,5 +149,5 @@ src/
 
 ---
 
-**Status:** All four phases complete. Interactive mode system operational.  
+**Status:** All six phases complete. Background daemon service operational.  
 **Build:** Zero TypeScript errors. All commands verified.

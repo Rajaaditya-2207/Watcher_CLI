@@ -3,6 +3,7 @@ import { logger } from '../utils/logger';
 import { ConfigManager } from '../config/ConfigManager';
 import { WatcherDatabase } from '../database/Database';
 import { GitService } from '../git/GitService';
+import { addProject } from '../daemon/daemonRegistry';
 import { CommandOptions, WatcherConfig } from '../types';
 import path from 'path';
 
@@ -110,10 +111,29 @@ export async function initCommand(options: CommandOptions): Promise<void> {
     db.close();
     logger.stopSpinner(true, 'Database initialized');
 
+    // Register in global daemon registry
+    addProject(projectPath, projectName);
+    logger.success('Project registered for background monitoring.');
+
+    // Ask about daemon
+    const { enableDaemon } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'enableDaemon',
+        message: 'Enable background monitoring? (runs automatically even without terminal)',
+        default: true,
+      },
+    ]);
+
     logger.box(
-      `Watcher initialized successfully.\n\nNext steps:\n  1. Run: watcher config    (set your API key)\n  2. Run: watcher watch     (start monitoring)\n  3. Start coding.`,
+      `Watcher initialized successfully.\n\nNext steps:\n  1. Run: watcher config    (set your API key)\n  2. Run: watcher watch     (start monitoring)${enableDaemon ? '\n  3. Run: watcher daemon start' : ''}\n\nBackground monitoring: ${enableDaemon ? 'Enabled' : 'Disabled'}`,
       'Setup Complete'
     );
+
+    if (enableDaemon) {
+      logger.info('Run: watcher daemon start   (to start background service)');
+      logger.info('Run: watcher daemon enable  (to auto-start on boot)');
+    }
   } catch (error: any) {
     logger.error(`Initialization failed: ${error.message}`);
     process.exit(1);

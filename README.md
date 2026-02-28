@@ -125,6 +125,12 @@ Automatic file monitoring with AI analysis. Once started, it:
 | `watcher report` | Generate project status report |
 | `watcher insights` | View development analytics |
 | `watcher config` | Manage configuration and API keys |
+| `watcher daemon start` | Start background monitoring service |
+| `watcher daemon stop` | Stop background daemon |
+| `watcher daemon status` | Check daemon status and monitored projects |
+| `watcher daemon logs` | View daemon log output |
+| `watcher daemon enable` | Auto-start daemon on system boot |
+| `watcher daemon disable` | Remove auto-start |
 
 ### Command Options
 
@@ -138,8 +144,10 @@ watcher report --format json --since 2024-01-01 --output report.json
 # View monthly insights
 watcher insights --period month
 
-# View specific metric
-watcher insights --metric debt
+# Background daemon
+watcher daemon start
+watcher daemon status
+watcher daemon enable
 ```
 
 ---
@@ -338,6 +346,13 @@ MIT License — see [LICENSE](LICENSE) file for details.
 - [x] Watch Mode (automatic progress logging)
 - [x] Session management and token tracking
 - [x] Repository inspection tools (git status, diff, file read)
+
+### Phase 6: Background Daemon Service — COMPLETE
+- [x] Global project registry (~/.watcher/projects.json)
+- [x] Single daemon process monitoring all registered projects
+- [x] Cross-platform auto-start (Windows Task Scheduler, macOS LaunchAgent, Linux systemd)
+- [x] Daemon commands (start, stop, status, logs, enable, disable)
+- [x] Init integration (auto-register + daemon prompt)
 
 ### Future
 - [ ] VS Code extension

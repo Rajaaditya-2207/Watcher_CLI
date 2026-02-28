@@ -12,6 +12,7 @@ import { reportCommand } from './commands/report';
 import { insightsCommand } from './commands/insights';
 import { configCommand } from './commands/config';
 import { initCommand } from './commands/init';
+import { daemonCommand } from './commands/daemon';
 
 const NEON = chalk.hex('#39FF14');
 
@@ -63,6 +64,12 @@ async function main(): Promise<void> {
       .command('config')
       .description('Manage configuration and API keys')
       .action(configCommand);
+
+    // Handle daemon command manually (uses subcommands)
+    if (args[0] === 'daemon') {
+      await daemonCommand(args.slice(1));
+      return;
+    }
 
     program.parse(process.argv);
     return;

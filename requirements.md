@@ -301,6 +301,12 @@ Watcher is a CLI tool that monitors codebases in real-time, providing:
 - [x] Interactive onboarding for first-run setup
 - [x] Table-formatted analytics display
 
+### AC6: Background Daemon
+- [x] Single daemon process monitors all registered projects
+- [x] Daemon runs after terminal is closed
+- [x] Cross-platform auto-start on boot
+- [x] Daemon commands (start, stop, status, logs)
+
 ## Cost Structure
 
 ### Implementation Cost
@@ -340,3 +346,4 @@ Watcher is a CLI tool that monitors codebases in real-time, providing:
 | Phase 3 | Documentation Generation (PROGRESS.md, CHANGELOG.md, reports) | COMPLETE |
 | Phase 4 | Analytics and Insights (velocity, debt tracking) | COMPLETE |
 | Phase 5 | Interactive Mode System (onboarding, chat, watch modes) | COMPLETE |
+| Phase 6 | Background Daemon Service (auto-start, project registry) | COMPLETE |

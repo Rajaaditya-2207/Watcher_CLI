@@ -43,6 +43,10 @@ src/
   analytics/
     AnalyticsEngine.ts            Velocity and productivity metrics
     TechnicalDebtTracker.ts       Code health scanning
+  daemon/
+    daemon.ts                     Background monitoring process
+    daemonRegistry.ts             Global project registry
+    autostart.ts                  OS auto-start integration
   git/
     GitService.ts                 Git operations wrapper
   monitor/
@@ -108,8 +112,13 @@ watcher report --format json --since 2024-01-01 --output report.json
 watcher insights --period week
 watcher insights --period month --metric debt
 
-# Manage configuration
-watcher config
+# Background daemon
+watcher daemon start
+watcher daemon stop
+watcher daemon status
+watcher daemon logs
+watcher daemon enable
+watcher daemon disable
 ```
 
 ## Development Commands
