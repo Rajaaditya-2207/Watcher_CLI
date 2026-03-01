@@ -24,9 +24,9 @@ export async function runOnboarding(projectPath: string): Promise<void> {
             name: 'provider',
             message: 'Select your AI provider:',
             choices: [
+                { name: NEON('AWS Bedrock') + chalk.dim(' — Claude 4.6, Titan, Llama via AWS'), value: 'bedrock' },
                 { name: NEON('OpenRouter') + chalk.dim(' — Claude, GPT-4, Gemini, Llama & more'), value: 'openrouter' },
                 { name: NEON('Groq') + chalk.dim(' — Ultra-fast inference with Llama models'), value: 'groq' },
-                { name: NEON('AWS Bedrock') + chalk.dim(' — Enterprise-grade AI'), value: 'bedrock' },
             ],
         },
     ]);
