@@ -133,7 +133,7 @@ code {
 
 /* ========== INSTALL BOX ========== */
 .install-box {
-  max-width: 580px;
+  max-width: 720px;
   margin: 0 auto 56px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -179,7 +179,7 @@ code {
 .install-panel code {
   color: var(--green);
   font-size: 0.95rem;
-  word-break: break-all;
+  white-space: nowrap;
   min-width: 0;
 }
 
@@ -276,11 +276,12 @@ code {
 /* Banner */
 .tui-banner {
   color: var(--green);
-  font-size: 0.65rem;
-  line-height: 1.2;
+  font-size: 0.55rem;
+  line-height: 1.15;
   text-align: center;
   margin: 4px 0 8px;
   text-shadow: 0 0 8px var(--green-glow);
+  letter-spacing: 0.05em;
 }
 
 /* Info lines */
@@ -457,9 +458,19 @@ code {
 }
 
 .feature-icon {
-  font-size: 1.6rem;
+  width: 40px;
+  height: 40px;
   margin-bottom: 16px;
-  filter: grayscale(0.3);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon svg {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 6px var(--green-glow));
 }
 
 .feature-card h4 {
