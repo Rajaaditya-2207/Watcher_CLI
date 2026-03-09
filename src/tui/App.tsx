@@ -909,7 +909,9 @@ To call a tool, include this exact syntax on its own line in your response:
         const abortController = new AbortController();
         abortControllerRef.current = abortController;
         const TOOL_CALL_RE = /^\[TOOL_CALL:\s*(.+?)\]$/gm;
-        const MAX_TOOL_ROUNDS = 5;
+        const MAX_TOOL_ROUNDS = 3;
+        // Cache system prompt once — avoids re-fetching file list/git on every round
+        const systemPrompt = getSystemPrompt();
 
         try {
             const startTime = Date.now();
@@ -923,13 +925,15 @@ To call a tool, include this exact syntax on its own line in your response:
 
             // Agentic loop: call AI, parse tool calls, feed results, repeat
             for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
-                const fullPrompt = conversationMessages.map(m => {
+                // Keep only the last 6 messages to cap token growth in long loops
+                const recentMessages = conversationMessages.slice(-6);
+                const fullPrompt = recentMessages.map(m => {
                     if (m.role === 'user') return `User: ${m.content}`;
                     if (m.role === 'tool') return `Tool Result:\n${m.content}`;
                     return `Assistant: ${m.content}`;
                 }).join('\n\n');
 
-                const response = await aiProviderRef.current.analyze(fullPrompt, getSystemPrompt(), abortController.signal);
+                const response = await aiProviderRef.current.analyze(fullPrompt, systemPrompt, abortController.signal);
 
                 if (response.usage) {
                     totalPromptTokens += response.usage.promptTokens;
