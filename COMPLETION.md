@@ -122,6 +122,6 @@ App.tsx
 
 ## Distribution
 
-- **npm:** `npm install -g @AdiRajaaditya/watcher-cli`
+- **npm:** `npm install -g @kreonyx/watcher-cli`
 - **GitHub:** [github.com/Rajaaditya-2207/Watcher_CLI](https://github.com/Rajaaditya-2207/Watcher_CLI)
 - **Website:** [Rajaaditya-2207.github.io/Watcher_CLI](https://Rajaaditya-2207.github.io/Watcher_CLI)

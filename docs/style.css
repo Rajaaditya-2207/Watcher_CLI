@@ -179,8 +179,8 @@ code {
 .install-panel code {
   color: var(--green);
   font-size: 0.95rem;
-  white-space: nowrap;
-  overflow-x: auto;
+  word-break: break-all;
+  min-width: 0;
 }
 
 .copy-btn {

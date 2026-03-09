@@ -11,7 +11,7 @@
 
 **Silent Observer. Intelligent Documentation.**
 
-[![npm version](https://img.shields.io/npm/v/@AdiRajaaditya/watcher-cli.svg?color=39FF14)](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli)
+[![npm version](https://img.shields.io/npm/v/@kreonyx/watcher-cli.svg?color=39FF14)](https://www.npmjs.com/package/@kreonyx/watcher-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-39FF14.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16-39FF14)](https://nodejs.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-39FF14.svg)](http://makeapullrequest.com)
@@ -19,7 +19,7 @@
 **A CLI development observer that translates code changes into human-readable narratives.**
 **Your AI-powered silent technical writer — right in the terminal.**
 
-[Website](https://Rajaaditya-2207.github.io/Watcher_CLI) · [npm](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli) · [GitHub](https://github.com/Rajaaditya-2207/Watcher_CLI)
+[Website](https://Rajaaditya-2207.github.io/Watcher_CLI) · [npm](https://www.npmjs.com/package/@kreonyx/watcher-cli) · [GitHub](https://github.com/Rajaaditya-2207/Watcher_CLI)
 
 </div>
 
@@ -28,7 +28,7 @@
 ## Install
 
 ```bash
-npm install -g @AdiRajaaditya/watcher-cli
+npm install -g @kreonyx/watcher-cli
 ```
 
 Then run anywhere:

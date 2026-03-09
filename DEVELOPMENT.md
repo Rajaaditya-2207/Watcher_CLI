@@ -151,4 +151,4 @@ npm login
 npm publish --access public
 ```
 
-The package is published as `@AdiRajaaditya/watcher-cli` with the `watcher` binary.
+The package is published as `@kreonyx/watcher-cli` with the `watcher` binary.
