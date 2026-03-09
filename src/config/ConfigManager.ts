@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { WatcherConfig } from '../types';
+
+const GLOBAL_DIR = path.join(os.homedir(), '.watcher');
+const GLOBAL_CONFIG = path.join(GLOBAL_DIR, 'config.json');
 
 export class ConfigManager {
   private configPath: string;
@@ -13,8 +17,14 @@ export class ConfigManager {
       'dist/**',
       'build/**',
       '*.log',
+      '**/*.log',
       '.git/**',
       'coverage/**',
+      '.watcher/**',
+      '**/*.db',
+      '**/*.map',
+      '.env',
+      '.env.*',
     ],
     features: {
       autoDocumentation: true,
@@ -27,8 +37,11 @@ export class ConfigManager {
     },
   };
 
-  constructor(projectPath: string = process.cwd()) {
-    this.configPath = path.join(projectPath, '.watcherrc.json');
+  constructor(_projectPath: string = process.cwd()) {
+    if (!fs.existsSync(GLOBAL_DIR)) {
+      fs.mkdirSync(GLOBAL_DIR, { recursive: true });
+    }
+    this.configPath = GLOBAL_CONFIG;
   }
 
   async load(): Promise<WatcherConfig> {

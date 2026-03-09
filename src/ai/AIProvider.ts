@@ -7,7 +7,7 @@ export abstract class AIProvider {
     this.config = config;
   }
 
-  abstract analyze(prompt: string, systemPrompt?: string): Promise<AIResponse>;
+  abstract analyze(prompt: string, systemPrompt?: string, signal?: AbortSignal): Promise<AIResponse>;
 
   abstract validateConfig(): Promise<boolean>;
 
@@ -21,12 +21,14 @@ export abstract class AIProvider {
   protected async makeRequest(
     url: string,
     body: any,
-    headers: Record<string, string>
+    headers: Record<string, string>,
+    signal?: AbortSignal,
   ): Promise<any> {
     const response = await fetch(url, {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
+      signal,
     });
 
     if (!response.ok) {

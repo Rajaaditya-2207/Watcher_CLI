@@ -1,28 +1,36 @@
 import inquirer from 'inquirer';
+import fs from 'fs';
 import { logger } from '../utils/logger';
 import { ConfigManager } from '../config/ConfigManager';
 import { WatcherDatabase } from '../database/Database';
 import { GitService } from '../git/GitService';
 import { addProject } from '../daemon/daemonRegistry';
-import { CommandOptions, WatcherConfig } from '../types';
+import { CommandOptions } from '../types';
 import path from 'path';
 
 export async function initCommand(options: CommandOptions): Promise<void> {
   try {
-    logger.header('Initializing Watcher');
+    logger.header('Initializing Watcher for this project');
 
     const projectPath = process.cwd();
     const projectName = path.basename(projectPath);
-    const configManager = new ConfigManager(projectPath);
 
-    // Check if already initialized
-    if (configManager.exists() && !options.force) {
-      logger.warn('Watcher is already initialized in this project.');
+    // Global config must already exist (created by first-run onboarding)
+    const configManager = new ConfigManager(projectPath);
+    if (!configManager.exists()) {
+      logger.error('Watcher is not set up yet. Run "watcher" (no arguments) to complete first-time setup.');
+      process.exit(1);
+    }
+
+    // Check if this project already has a local database
+    const localDbPath = path.join(projectPath, '.watcher', 'watcher.db');
+    if (fs.existsSync(localDbPath) && !options.force) {
+      logger.warn('This project is already initialized.');
       const { proceed } = await inquirer.prompt([
         {
           type: 'confirm',
           name: 'proceed',
-          message: 'Do you want to re-initialize?',
+          message: 'Re-initialize the local project database?',
           default: false,
         },
       ]);
@@ -39,67 +47,8 @@ export async function initCommand(options: CommandOptions): Promise<void> {
       logger.warn('This is not a Git repository. Some features may be limited.');
     }
 
-    // Interactive configuration
-    const answers = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'aiProvider',
-        message: 'Select AI provider:',
-        choices: [
-          { name: 'OpenRouter', value: 'openrouter' },
-          { name: 'AWS Bedrock', value: 'bedrock' },
-          { name: 'Groq', value: 'groq' },
-        ],
-        default: 'openrouter',
-      },
-      {
-        type: 'input',
-        name: 'watchInterval',
-        message: 'Watch interval (ms):',
-        default: '5000',
-        validate: (input) => {
-          const num = parseInt(input);
-          return !isNaN(num) && num > 0 ? true : 'Please enter a valid number';
-        },
-      },
-      {
-        type: 'confirm',
-        name: 'autoDocumentation',
-        message: 'Enable auto-documentation?',
-        default: true,
-      },
-      {
-        type: 'confirm',
-        name: 'technicalDebt',
-        message: 'Enable technical debt tracking?',
-        default: true,
-      },
-      {
-        type: 'confirm',
-        name: 'analytics',
-        message: 'Enable analytics?',
-        default: true,
-      },
-    ]);
-
-    // Create configuration
-    const config: WatcherConfig = {
-      ...configManager.getDefaultConfig(),
-      aiProvider: answers.aiProvider,
-      watchInterval: parseInt(answers.watchInterval),
-      features: {
-        autoDocumentation: answers.autoDocumentation,
-        technicalDebt: answers.technicalDebt,
-        analytics: answers.analytics,
-      },
-    };
-
-    logger.startSpinner('Saving configuration...');
-    await configManager.save(config);
-    logger.stopSpinner(true, 'Configuration saved');
-
-    // Initialize database
-    logger.startSpinner('Initializing database...');
+    // Initialize local database
+    logger.startSpinner('Initializing project database...');
     const db = new WatcherDatabase(projectPath);
     await db.initialize();
     db.saveProject({
@@ -109,7 +58,7 @@ export async function initCommand(options: CommandOptions): Promise<void> {
       architecture: 'Unknown',
     });
     db.close();
-    logger.stopSpinner(true, 'Database initialized');
+    logger.stopSpinner(true, 'Project database initialized');
 
     // Register in global daemon registry
     addProject(projectPath, projectName);
@@ -120,14 +69,14 @@ export async function initCommand(options: CommandOptions): Promise<void> {
       {
         type: 'confirm',
         name: 'enableDaemon',
-        message: 'Enable background monitoring? (runs automatically even without terminal)',
+        message: 'Enable background monitoring? (runs even when no terminal is open)',
         default: true,
       },
     ]);
 
     logger.box(
-      `Watcher initialized successfully.\n\nNext steps:\n  1. Run: watcher config    (set your API key)\n  2. Run: watcher watch     (start monitoring)${enableDaemon ? '\n  3. Run: watcher daemon start' : ''}\n\nBackground monitoring: ${enableDaemon ? 'Enabled' : 'Disabled'}`,
-      'Setup Complete'
+      `Project initialized.\n\nRun "watcher" to open the interactive TUI.${enableDaemon ? '\nRun "watcher daemon start" to start background monitoring.' : ''}`,
+      'Done'
     );
 
     if (enableDaemon) {

@@ -1,5 +1,6 @@
 import { GitService } from '../git/GitService';
 import { WatcherDatabase } from '../database/Database';
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -27,11 +28,13 @@ Available information sources:
 - Git diff: see current uncommitted changes
 - File listing: see all project files
 - File contents: read specific files
-- Project summary: overview from the database including change history`;
+- Project summary: overview from the database including change history
+- Shell commands: user can run shell commands via the "run <command>" or "exec <command>" syntax to get live system output`;
     }
 
     async executeCommand(command: string): Promise<string> {
         const cmd = command.trim().toLowerCase();
+        const rawCmd = command.trim();
 
         if (cmd === 'status' || cmd === 'git status') {
             return this.getGitStatus();
@@ -43,7 +46,7 @@ Available information sources:
             return this.getFileList();
         }
         if (cmd.startsWith('cat ') || cmd.startsWith('read ')) {
-            const filePath = command.trim().substring(cmd.startsWith('cat') ? 4 : 5).trim();
+            const filePath = rawCmd.substring(cmd.startsWith('cat') ? 4 : 5).trim();
             return this.readFile(filePath);
         }
         if (cmd === 'summary' || cmd === 'project') {
@@ -52,8 +55,67 @@ Available information sources:
         if (cmd === 'help' || cmd === 'tools') {
             return this.getToolHelp();
         }
+        // Shell command execution
+        if (cmd.startsWith('run ') || cmd.startsWith('exec ') || cmd.startsWith('$ ')) {
+            let shellCmd: string;
+            if (cmd.startsWith('$ ')) {
+                shellCmd = rawCmd.substring(2).trim();
+            } else if (cmd.startsWith('run ')) {
+                shellCmd = rawCmd.substring(4).trim();
+            } else {
+                shellCmd = rawCmd.substring(5).trim();
+            }
+            return this.executeShellCommand(shellCmd);
+        }
 
         return '';
+    }
+
+    /**
+     * Execute a shell command in the project directory and return the output.
+     * Restricted to safe, read-only style commands by default.
+     */
+    executeShellCommand(command: string): string {
+        // Block dangerous commands
+        const blocked = ['rm ', 'del ', 'rmdir', 'format ', 'mkfs', 'dd ', 'shutdown', 'reboot',
+            'sudo ', 'chmod ', 'chown ', 'kill ', 'pkill ', 'taskkill', '> ', '>> '];
+        const cmdLower = command.toLowerCase().trim();
+
+        for (const b of blocked) {
+            if (cmdLower.startsWith(b) || cmdLower.includes(` ${b}`)) {
+                return `⚠ Blocked: "${command}" — destructive commands are not allowed in Watcher chat. Use your terminal directly for such operations.`;
+            }
+        }
+
+        try {
+            const output = execSync(command, {
+                cwd: this.projectPath,
+                encoding: 'utf-8',
+                timeout: 15000,      // 15 second timeout
+                maxBuffer: 1024 * 512, // 512KB max output
+                stdio: ['pipe', 'pipe', 'pipe'],
+            });
+
+            const result = output.trim();
+            if (result.length === 0) {
+                return `(command executed successfully with no output)`;
+            }
+
+            // Truncate very long output
+            if (result.length > 5000) {
+                return result.substring(0, 5000) + '\n\n... (output truncated at 5000 chars)';
+            }
+
+            return result;
+        } catch (error: any) {
+            if (error.stderr) {
+                return `Error: ${error.stderr.toString().trim()}`;
+            }
+            if (error.stdout) {
+                return error.stdout.toString().trim();
+            }
+            return `Error executing command: ${error.message}`;
+        }
     }
 
     getGitStatus(): string {
@@ -189,12 +251,15 @@ Available information sources:
 
     getToolHelp(): string {
         return `Available commands:
-  status      Show git status (branch, staged, unstaged, untracked)
-  diff        Show current uncommitted changes
-  files       List all project files
-  cat <path>  Read a specific file
-  summary     Show project summary from database
-  clear       Clear conversation history
-  exit        Exit chat mode`;
+  status         Show git status (branch, staged, unstaged, untracked)
+  diff           Show current uncommitted changes
+  files          List all project files
+  cat <path>     Read a specific file
+  summary        Show project summary from database
+  run <cmd>      Execute a shell command (e.g. run git log -5)
+  exec <cmd>     Execute a shell command (alias for run)
+  $ <cmd>        Execute a shell command (shorthand)
+  clear          Clear conversation history
+  exit           Exit chat mode`;
     }
 }

@@ -35,8 +35,7 @@ async function fetchOpenRouterModels(apiKey: string): Promise<ModelInfo[]> {
             }))
             .sort((a: ModelInfo, b: ModelInfo) => a.name.localeCompare(b.name));
 
-        // Return top 50 most relevant models to keep the list manageable
-        return models.slice(0, 50);
+        return models;
     } catch (error: any) {
         throw new Error(`Failed to fetch OpenRouter models: ${error.message}`);
     }

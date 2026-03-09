@@ -1,6 +1,7 @@
 export interface WatcherConfig {
   aiProvider: 'openrouter' | 'bedrock' | 'groq';
   model: string;
+  keyAlias?: string;
   watchInterval: number;
   ignorePatterns: string[];
   features: {

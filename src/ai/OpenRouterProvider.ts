@@ -11,7 +11,7 @@ export class OpenRouterProvider extends AIProvider {
     }
   }
 
-  async analyze(prompt: string, systemPrompt?: string): Promise<AIResponse> {
+  async analyze(prompt: string, systemPrompt?: string, signal?: AbortSignal): Promise<AIResponse> {
     const messages: any[] = [];
 
     if (systemPrompt) {
@@ -38,7 +38,7 @@ export class OpenRouterProvider extends AIProvider {
     };
 
     try {
-      const data = await this.makeRequest(`${this.baseURL}/chat/completions`, body, headers);
+      const data = await this.makeRequest(`${this.baseURL}/chat/completions`, body, headers, signal);
 
       return {
         content: data.choices[0].message.content,
@@ -51,6 +51,18 @@ export class OpenRouterProvider extends AIProvider {
           : undefined,
       };
     } catch (error: any) {
+      const msg: string = error.message ?? '';
+      if (
+        msg.includes('data policy') ||
+        msg.includes('Free model publication') ||
+        msg.includes('No endpoints found')
+      ) {
+        throw new Error(
+          `Model unavailable: "${this.config.model}" is blocked by your OpenRouter data policy.\n` +
+          `Fix: Go to https://openrouter.ai/settings/privacy and enable third-party model access,\n` +
+          `or open /config edit and choose a different model.`
+        );
+      }
       throw new Error(`OpenRouter API Error: ${error.message}`);
     }
   }

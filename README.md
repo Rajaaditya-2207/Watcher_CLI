@@ -9,146 +9,102 @@
 +  ╚══╝╚══╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
 ```
 
+**Silent Observer. Intelligent Documentation.**
+
+[![npm version](https://img.shields.io/npm/v/@AdiRajaaditya/watcher-cli.svg?color=39FF14)](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-39FF14.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D16-39FF14)](https://nodejs.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-39FF14.svg)](http://makeapullrequest.com)
+
+**A CLI development observer that translates code changes into human-readable narratives.**
+**Your AI-powered silent technical writer — right in the terminal.**
+
+[Website](https://AdiRajaaditya.github.io/watcher) · [npm](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli) · [GitHub](https://github.com/AdiRajaaditya/watcher)
+
 </div>
 
-# Watcher
-
-> Silent Observer. Intelligent Documentation.
-
-A CLI-based development observer that translates code changes into human-readable narratives.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-
-**Team KREONYX** | AWS AI for Bharat Hackathon | Track 1: AI for Learning & Developer Productivity
-
 ---
 
-## What is Watcher?
-
-Watcher is your **silent technical writer** that automatically documents your development journey. It monitors your codebase in real-time, understands what you're building through AI-powered semantic analysis, and generates comprehensive documentation without you lifting a finger.
-
-### The Problem
-
-- **Documentation Fatigue:** Developers spend hours writing progress reports and changelogs
-- **AI Context Loss:** Constantly re-explaining project context to AI coding assistants
-- **Learning Barriers:** Beginners struggle to identify what's missing in their implementations
-- **Hidden Technical Debt:** Code issues accumulate silently until they become critical
-- **Team Visibility Gap:** Hard to track progress and onboard new developers
-
-### The Solution
-
-Watcher provides:
-- **80% reduction** in documentation time
-- **3x better** AI coding suggestions with context export
-- **Interactive AI agent** for repository analysis and questions
-- **Automated** progress logging, changelogs, and technical debt detection
-- **100% privacy** with Bring Your Own Key (BYOK) architecture
-
----
-
-## Key Features
-
-### Semantic Code Understanding
-Goes beyond syntax to understand architectural patterns and translates technical changes into human-readable narratives.
-
-### Interactive Chat Mode
-Talk to an AI agent about your repository. Ask questions about your codebase, git status, project structure, and development progress — all from your terminal.
-
-### Auto-Generated Documentation
-Maintains `PROGRESS.md` and `CHANGELOG.md` as you code. No manual updates needed.
-
-### Privacy-First BYOK Architecture
-Your code **never leaves your machine**. Bring your own API keys for complete control over data and costs.
-
-### Development Analytics
-Track velocity metrics, category breakdown, file hotspots, and activity timeline with the `insights` command.
-
-### Technical Debt Tracking
-Automatically detects large files, TODO/FIXME comments, and other code health issues.
-
-### Dynamic Model Selection
-Fetches available models from your provider's API at runtime. You pick the model you prefer.
-
----
-
-## Quick Start
-
-### Installation
+## Install
 
 ```bash
-npm install -g watcher-cli
+npm install -g @AdiRajaaditya/watcher-cli
 ```
 
-### First Run
+Then run anywhere:
 
 ```bash
 watcher
 ```
 
-On first run, Watcher walks you through setup:
-1. Select your AI provider (OpenRouter, Groq, or AWS Bedrock)
-2. Enter your API key (encrypted with AES-256-CBC)
-3. Choose your preferred model from the provider's available models
-4. Select your mode: **Chat Mode** or **Watch Mode**
+On first run, Watcher guides you through a one-time global setup:
+1. **Select AI provider** — AWS Bedrock, OpenRouter, or Groq
+2. **Enter API key** — encrypted with AES-256-CBC (skipped for Bedrock)
+3. **Pick your model** — fetched live from the provider API
+4. **Configure features** — auto-docs, tech debt, analytics
 
-### Chat Mode
-
-Interactive REPL where you talk to an AI agent about your repository:
-
-```
-watcher > What's the current git status?
-watcher > Explain the architecture of this project
-watcher > Which files have the most changes?
-```
-
-Built-in commands: `status`, `diff`, `files`, `cat <path>`, `summary`, `clear`, `exit`
-
-### Watch Mode
-
-Automatic file monitoring with AI analysis. Once started, it:
-- Detects file changes in real-time
-- Analyzes changes with AI for semantic understanding
-- Updates PROGRESS.md and CHANGELOG.md automatically
-- Persists all changes to the local database
+Your config is saved globally at `~/.watcher/config.json`. Every subsequent project just works.
 
 ---
 
-## Commands
+## What is Watcher?
+
+Watcher is your **silent technical writer**. It monitors your codebase in real-time, understands what you're building through AI-powered semantic analysis, and auto-generates documentation — all from a unified terminal UI.
+
+### The Problem
+
+- **Documentation Fatigue** — Developers spend hours writing progress reports
+- **AI Context Loss** — Constantly re-explaining project context to AI assistants
+- **Hidden Technical Debt** — Code issues accumulate silently
+- **Team Visibility Gap** — Hard to track progress across contributors
+
+### The Solution
+
+- **80% reduction** in documentation time
+- **Interactive AI agent** that knows your repository
+- **Automated** progress logging, changelogs, and tech debt detection
+- **100% privacy** — BYOK architecture, code never leaves your machine
+
+---
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **Unified TUI** | Ink-based React terminal UI with chat, file monitoring, and config editing in one view |
+| **AI Chat** | Ask questions about your codebase, git status, architecture — with agentic tool access |
+| **Auto Documentation** | Maintains `PROGRESS.md` and `CHANGELOG.md` as you code |
+| **Semantic Analysis** | AI understands architectural patterns, not just syntax diffs |
+| **Multi-Provider** | AWS Bedrock, OpenRouter (Claude/GPT-4/Gemini/Llama), Groq |
+| **Dynamic Models** | Fetches available models from your provider's API at runtime |
+| **BYOK Privacy** | Bring Your Own Key — your code never leaves your machine |
+| **Encrypted Credentials** | AES-256-CBC with machine-specific key derivation |
+| **Development Analytics** | Velocity metrics, file hotspots, activity timelines |
+| **Technical Debt** | Auto-scans for large files, TODO/FIXME/HACK |
+| **Background Daemon** | Monitor projects even when no terminal is open |
+| **Session Management** | Multiple named sessions, auto-save, switch between conversations |
+| **Mouse Scroll** | SGR mouse support for scroll and click in the TUI |
+
+---
+
+## Slash Commands
+
+All commands are available inside the unified TUI by typing `/`:
 
 | Command | Description |
 |---------|-------------|
-| `watcher` | Interactive mode (onboarding + mode selection) |
-| `watcher init` | Initialize Watcher in your project |
-| `watcher watch` | Start real-time monitoring |
-| `watcher report` | Generate project status report |
-| `watcher insights` | View development analytics |
-| `watcher config` | Manage configuration and API keys |
-| `watcher daemon start` | Start background monitoring service |
-| `watcher daemon stop` | Stop background daemon |
-| `watcher daemon status` | Check daemon status and monitored projects |
-| `watcher daemon logs` | View daemon log output |
-| `watcher daemon enable` | Auto-start daemon on system boot |
-| `watcher daemon disable` | Remove auto-start |
-
-### Command Options
-
-```bash
-# Watch with verbose output
-watcher watch --verbose
-
-# Generate report in JSON
-watcher report --format json --since 2024-01-01 --output report.json
-
-# View monthly insights
-watcher insights --period month
-
-# Background daemon
-watcher daemon start
-watcher daemon status
-watcher daemon enable
-```
+| `/help` | List all commands |
+| `/config` | View current configuration |
+| `/config edit` | Interactive config editor (provider, model, keys, features) |
+| `/search <pattern>` | Search project source files |
+| `/report` | Generate project status report |
+| `/insights` | Development analytics (all time) |
+| `/insights day\|week\|month` | Analytics for a specific period |
+| `/watch` | Toggle file monitoring on/off |
+| `/daemon status\|start\|stop` | Background daemon management |
+| `/session new\|list\|switch\|save` | Session management |
+| `/status` `/diff` `/files` | Git/filesystem quick views |
+| `/clear` `/quit` | Utility commands |
 
 ---
 
@@ -161,105 +117,53 @@ watcher daemon enable
        │
        v
 ┌─────────────────┐
-│ File Monitoring │  <-- Detects changes in real-time
+│ File Monitoring  │  ← Detects changes in real-time
 └──────┬──────────┘
        │
        v
 ┌─────────────────┐
-│  Git Analysis   │  <-- Analyzes diffs and status
+│  Git Analysis    │  ← Analyzes diffs and status
 └──────┬──────────┘
        │
        v
 ┌─────────────────┐
-│   AI Analysis   │  <-- Semantic understanding via AI
+│   AI Analysis    │  ← Semantic understanding via AI
 └──────┬──────────┘
        │
-       ├──> PROGRESS.md     (Auto-updated)
-       ├──> CHANGELOG.md    (Auto-updated)
-       ├──> SQLite Database (Change history)
-       └──> Terminal Output (Professional formatting)
+       ├──→ PROGRESS.md     (Auto-updated)
+       ├──→ CHANGELOG.md    (Auto-updated)
+       ├──→ SQLite Database (Change history)
+       └──→ Terminal TUI    (Interactive chat + monitoring)
 ```
 
-### Architecture
-
-- **AI Providers:** OpenRouter, Groq, AWS Bedrock (factory pattern)
-- **Analysis Engine:** Semantic analysis with JSON response parsing
-- **Local Database:** SQLite via sql.js (pure JavaScript, no native deps)
-- **Credential Security:** AES-256-CBC encryption with machine-specific keys
-- **Terminal UI:** Neon green themed output with chalk, ora, boxen
-
 ---
 
-## Use Cases
-
-### For Beginners
-- **Learning Validation:** See what you've accomplished and what's missing
-- **Repository Q&A:** Ask the AI agent questions about your codebase
-- **Progress Tracking:** Visualize your learning journey with auto-generated docs
-
-### For Professional Developers
-- **Automated Documentation:** Save 80% of documentation time
-- **Better AI Assistance:** Export context for superior AI suggestions
-- **Code Health:** Track technical debt automatically
-
-### For Team Leads
-- **Team Visibility:** Real-time project status
-- **Faster Onboarding:** New developers get up to speed 50% faster
-- **Data-Driven Planning:** Analytics and insights for better sprint planning
-
----
-
-## Privacy and Security
-
-### Your Code Stays Local
-- All code analysis happens on your machine
-- Only semantic diffs sent to AI (no raw code)
-- You control what gets analyzed
-- No telemetry or usage tracking
-
-### Bring Your Own Key (BYOK)
-- Use your own AI provider API keys
-- You control and pay for your API usage
-- Keys encrypted with AES-256-CBC at rest
-- Machine-specific key derivation
-
-### Cost Transparency
-- **Your Cost:** $2-30/month (based on your usage)
-- **Our Cost:** $0 (you bring your own keys)
-- **No Hidden Fees:** What you see is what you pay
-
----
-
-## Technology Stack
+## Architecture
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Node.js v16+ |
-| Language | TypeScript (strict mode) |
-| CLI Framework | Commander.js, Inquirer.js |
-| Terminal UI | Chalk, Ora, Boxen |
-| Database | SQLite via sql.js |
+| Runtime | Node.js 16+ |
+| Language | TypeScript |
+| Bundler | esbuild (~165kb output) |
+| TUI Framework | Ink + React 19 |
+| CLI | Commander.js |
+| Database | SQLite via sql.js (WASM, no native deps) |
 | File Monitoring | Chokidar |
 | AI Providers | OpenRouter, Groq, AWS Bedrock |
-| Security | AES-256-CBC encryption |
+| Security | AES-256-CBC encrypted credentials |
 
 ---
 
 ## Configuration
 
-### Configuration File (`.watcherrc.json`)
+Config is stored globally at `~/.watcher/config.json`:
 
 ```json
 {
-  "aiProvider": "openrouter",
-  "model": "anthropic/claude-3-sonnet",
+  "aiProvider": "bedrock",
+  "model": "anthropic.claude-3-sonnet-20240229-v1:0",
   "watchInterval": 5000,
-  "ignorePatterns": [
-    "node_modules/**",
-    "dist/**",
-    "*.log",
-    ".git/**"
-  ],
+  "ignorePatterns": ["node_modules/**", "dist/**", ".git/**", "*.log"],
   "features": {
     "autoDocumentation": true,
     "technicalDebt": true,
@@ -272,128 +176,55 @@ watcher daemon enable
 }
 ```
 
+| Path | Scope | Purpose |
+|------|-------|---------|
+| `~/.watcher/config.json` | Global | AI provider, model, features |
+| `~/.watcher/.credentials` | Global | Encrypted API keys |
+| `~/.watcher/projects.json` | Global | Daemon project registry |
+| `.watcher/watcher.db` | Per-project | Change history (SQLite) |
+| `.watcher/sessions/*.json` | Per-project | Chat session history |
+
+---
+
+## Privacy & Security
+
+- **Code stays local** — only semantic diffs sent to AI, never raw source
+- **BYOK** — you bring your own API keys, you control costs
+- **Encrypted at rest** — AES-256-CBC with machine-specific key derivation
+- **No telemetry** — zero tracking, zero data collection
+- **Your cost:** $2-30/month based on usage. **Our cost:** $0
+
+---
+
+## Development
+
+```bash
+git clone https://github.com/AdiRajaaditya/watcher.git
+cd watcher
+npm install
+npm run build        # esbuild → dist/
+npx tsc --noEmit     # type-check (separate from build)
+npm link             # test locally as `watcher`
+```
+
 ---
 
 ## Contributing
 
-We welcome contributions.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/kreonyx/watcher.git
-cd watcher
-
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Link for local testing
-npm link
-```
-
-### Contribution Guidelines
-
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Commit your changes (`git commit -m 'Add new feature'`)
-4. Push to the branch (`git push origin feature/new-feature`)
+3. Commit changes (`git commit -m 'Add new feature'`)
+4. Push (`git push origin feature/new-feature`)
 5. Open a Pull Request
+
+---
+
+## Team
+
+**KREONYX** — Built by Rajaaditya. R
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) file for details.
-
----
-
-## Roadmap
-
-### Phase 1: Core Infrastructure — COMPLETE
-- [x] CLI framework with Commander.js
-- [x] Configuration management (.watcherrc.json)
-- [x] SQLite database layer (sql.js)
-- [x] Real-time file monitoring (chokidar)
-- [x] Git integration (branch, status, diff)
-- [x] Terminal UI (chalk, ora, boxen)
-
-### Phase 2: AI Integration — COMPLETE
-- [x] Multi-provider support (OpenRouter, Groq, Bedrock)
-- [x] Semantic analysis engine
-- [x] AES-256-CBC credential encryption
-- [x] Dynamic model fetching from provider APIs
-- [x] Configuration and connection testing
-
-### Phase 3: Documentation Generation — COMPLETE
-- [x] Auto-generated PROGRESS.md
-- [x] Auto-generated CHANGELOG.md
-- [x] Full report command (markdown and JSON output)
-- [x] Database persistence of change records
-
-### Phase 4: Analytics and Insights — COMPLETE
-- [x] Velocity metrics and category breakdown
-- [x] File hotspot detection
-- [x] Technical debt scanning (large files, TODO/FIXME)
-- [x] Full insights command with formatted terminal output
-
-### Phase 5: Interactive Mode System — COMPLETE
-- [x] First-run onboarding (provider, API key, model selection)
-- [x] Chat Mode (interactive AI agent for repository analysis)
-- [x] Watch Mode (automatic progress logging)
-- [x] Session management and token tracking
-- [x] Repository inspection tools (git status, diff, file read)
-
-### Phase 6: Background Daemon Service — COMPLETE
-- [x] Global project registry (~/.watcher/projects.json)
-- [x] Single daemon process monitoring all registered projects
-- [x] Cross-platform auto-start (Windows Task Scheduler, macOS LaunchAgent, Linux systemd)
-- [x] Daemon commands (start, stop, status, logs, enable, disable)
-- [x] Init integration (auto-register + daemon prompt)
-
-### Future
-- [ ] VS Code extension
-- [ ] JetBrains plugin
-- [ ] Team collaboration features
-- [ ] Custom reporting dashboards
-
----
-
-## Hackathon Submission
-
-**AWS AI for Bharat Hackathon**  
-**Track 1:** AI for Learning and Developer Productivity  
-**Team:** KREONYX  
-**Team Leader:** Rajaaditya. R
-
-### Why Watcher
-
-1. **Real Problem, Real Solution:** Addresses actual pain points developers face daily
-2. **Privacy-First:** BYOK architecture ensures data security and user control
-3. **Interactive AI Agent:** Chat Mode brings conversational AI to the terminal
-4. **Sustainable Model:** Low operational cost, free for users
-5. **AI-Powered Innovation:** Leverages multiple AI providers for semantic understanding
-6. **Open Source:** Community-driven, no vendor lock-in
-
----
-
-## Acknowledgments
-
-- **Claude AI** for semantic code understanding
-- **AWS Bedrock** for enterprise AI capabilities
-- **OpenRouter** for multi-model access
-- **Groq** for ultra-fast inference
-- **Open Source Community** for tools and libraries
-
----
-
-<div align="center">
-
-**Made by Team KREONYX**
-
-[Star us on GitHub](https://github.com/kreonyx/watcher) | [Report Bug](https://github.com/kreonyx/watcher/issues) | [Request Feature](https://github.com/kreonyx/watcher/issues)
-
-</div>
+MIT — see [LICENSE](LICENSE) for details.

@@ -1,153 +1,127 @@
-# Watcher CLI — Completion Report
+# Watcher — Project Completion Report
 
-**Project:** Watcher CLI  
-**Team:** KREONYX  
-**Team Leader:** Rajaaditya. R  
-**Hackathon:** AWS AI for Bharat Hackathon  
-**Track:** Track 1 — AI for Learning & Developer Productivity  
+**Team:** KREONYX
+**Author:** Rajaaditya. R
+**License:** MIT
 
 ---
 
-## Completed Phases
+## Overview
 
-### Phase 1: Core Infrastructure
-
-| Component | Implementation |
-|-----------|---------------|
-| CLI Framework | Commander.js with interactive prompts via Inquirer.js |
-| Configuration | `.watcherrc.json` with ConfigManager class |
-| Database | SQLite via sql.js (pure JavaScript, no native dependencies) |
-| File Monitoring | Real-time change detection via chokidar with ignore patterns |
-| Git Integration | Branch, status, diff retrieval via native git commands |
-| Terminal UI | Neon green themed output with chalk, ora, and boxen |
-
-### Phase 2: AI Integration
-
-| Component | Implementation |
-|-----------|---------------|
-| Provider Architecture | Abstract base class with strategy pattern via AIProviderFactory |
-| OpenRouter Provider | Full API integration with Claude, GPT-4, Gemini, and Llama models |
-| Groq Provider | Fast inference integration with Llama models |
-| AWS Bedrock Provider | Structural implementation (requires AWS SDK for full use) |
-| Semantic Analyzer | AI-powered code change analysis with JSON response parsing |
-| Credential Manager | AES-256-CBC encrypted API key storage with machine-specific keys |
-| Dynamic Model Fetcher | Fetches available models from provider APIs at runtime |
-
-### Phase 3: Documentation Generation
-
-| Component | Implementation |
-|-----------|---------------|
-| Progress Generator | Auto-generates `PROGRESS.md` from database records |
-| Changelog Generator | Auto-generates `CHANGELOG.md` grouped by date and category |
-| Report Command | Full `watcher report` with markdown and JSON output, date filtering |
-| Database Persistence | Change records saved during watch mode for historical tracking |
-
-### Phase 4: Analytics and Insights
-
-| Component | Implementation |
-|-----------|---------------|
-| Analytics Engine | Velocity metrics, category breakdown, file hotspots, activity timeline |
-| Technical Debt Tracker | Scans for large files (>500 lines) and TODO/FIXME/HACK comments |
-| Insights Command | Full `watcher insights` with period filtering and formatted terminal output |
-
-### Interactive Mode System
-
-| Component | Implementation |
-|-----------|---------------|
-| First-Run Onboarding | Provider selection, API key entry, dynamic model selection |
-| Chat Mode | Interactive REPL with AI agent for repo analysis and questions |
-| Watch Mode | Automatic file monitoring with AI analysis and documentation updates |
-| Session Management | Conversation history and token usage tracking |
-| Chat Tools | Git status, diff, file listing, file reading, project summary |
-
-### Background Daemon Service
-
-| Component | Implementation |
-|-----------|---------------|
-| Global Registry | Project tracking at ~/.watcher/projects.json |
-| Daemon Process | Single background Node.js process for all projects |
-| Auto-Start | Windows Task Scheduler, macOS LaunchAgent, Linux systemd |
-| Daemon Commands | start, stop, status, logs, enable, disable |
-| Init Integration | Auto-register project + daemon prompt |
+Watcher is a CLI-based development observer that translates code changes into human-readable narratives. It monitors codebases in real-time, analyzes changes via AI, and auto-generates documentation — acting as a silent technical writer for your project.
 
 ---
 
 ## Architecture
 
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| CLI | Commander.js | Argument parsing, subcommands |
+| TUI | Ink + React 19 | Interactive terminal UI |
+| AI | OpenRouter / Groq / AWS Bedrock | Code analysis, chat |
+| Database | sql.js (WASM SQLite) | Change history |
+| Monitoring | chokidar | Real-time file watching |
+| Git | Git CLI wrapper | Branch, status, diff |
+| Encryption | AES-256-CBC | API key storage |
+
+### Data Flow
+
 ```
-src/
-  cli.ts                          Entry point with interactive flow
-  index.ts                        Public exports
-  ui/
-    banner.ts                     Neon green ASCII banner
-    onboarding.ts                 First-run setup flow
-  ai/
-    AIProvider.ts                 Abstract provider base class
-    AIProviderFactory.ts          Factory pattern for provider creation
-    OpenRouterProvider.ts         OpenRouter API integration
-    GroqProvider.ts               Groq API integration
-    BedrockProvider.ts            AWS Bedrock structure
-    SemanticAnalyzer.ts           AI-powered code analysis engine
-    modelFetcher.ts               Dynamic model listing from APIs
-  commands/
-    init.ts                       Project initialization
-    watch.ts                      File monitoring with AI analysis
-    report.ts                     Report generation (md/json)
-    insights.ts                   Analytics and debt tracking
-    config.ts                     Configuration management
-  modes/
-    chatMode.ts                   Interactive AI chat REPL
-    chatTools.ts                  Repository inspection tools
-    sessionManager.ts             Conversation and token tracking
-  config/
-    ConfigManager.ts              Configuration file management
-  credentials/
-    CredentialManager.ts          AES-256-CBC encrypted key storage
-  database/
-    Database.ts                   SQLite with full CRUD operations
-  documentation/
-    ProgressGenerator.ts          PROGRESS.md auto-generation
-    ChangelogGenerator.ts         CHANGELOG.md auto-generation
-  analytics/
-    AnalyticsEngine.ts            Velocity and productivity metrics
-    TechnicalDebtTracker.ts       Code health scanning
-  git/
-    GitService.ts                 Git operations wrapper
-  monitor/
-    FileMonitor.ts                File system change detection
-  types/
-    index.ts                      Core TypeScript interfaces
-    ai.ts                         AI-related type definitions
-  utils/
-    logger.ts                     Professional terminal output
+File Change → FileMonitor (chokidar)
+  → SemanticAnalyzer (AI provider)
+  → Database (sql.js)
+  → ProgressGenerator / ChangelogGenerator
+```
+
+### TUI Component Tree
+
+```
+App.tsx
+  ├── Banner.tsx              (initial view)
+  ├── ConfigEditor.tsx        (replaces chat when editing config)
+  ├── ChatView.tsx            (scrollable messages + markdown)
+  │   └── ink-spinner         (thinking indicator)
+  ├── CommandPalette.tsx       (hierarchical slash commands)
+  ├── InputArea.tsx            (text input)
+  ├── SidePanel.tsx            (status, activity, tokens)
+  └── StatusBar.tsx            (mode, model, shortcuts)
 ```
 
 ---
 
-## Technology Stack
+## Features Delivered
 
-| Layer | Technology |
-|-------|-----------|
-| Runtime | Node.js v16+ |
-| Language | TypeScript (strict mode) |
-| CLI Framework | Commander.js, Inquirer.js |
-| Terminal UI | Chalk, Ora, Boxen |
-| Database | SQLite via sql.js |
-| File Monitoring | Chokidar |
-| AI Providers | OpenRouter, Groq, AWS Bedrock |
-| Security | AES-256-CBC encryption, machine-specific keys |
+### Core
+- [x] Real-time file monitoring with configurable ignore patterns
+- [x] AI-powered semantic analysis of code changes
+- [x] Auto-generated PROGRESS.md and CHANGELOG.md
+- [x] SQLite change history (WASM, no native deps)
+
+### AI Integration
+- [x] Multi-provider support (AWS Bedrock, OpenRouter, Groq)
+- [x] BYOK — users provide their own API keys
+- [x] Model selection with live search against provider APIs
+- [x] Agentic tool-calling loop (up to 5 rounds per query)
+- [x] Abort in-flight AI responses (Esc / Ctrl+C)
+
+### Interactive TUI
+- [x] Ink + React 19 terminal UI with full keyboard navigation
+- [x] Mouse scroll support (scrollBus EventEmitter architecture)
+- [x] Hierarchical slash-command palette (keyboard + mouse click)
+- [x] Interactive ConfigEditor (replaces chat view)
+- [x] Multi-session management with auto-save
+- [x] Markdown rendering (headings, code blocks, bold, italic, links)
+- [x] Left-border message accents by role
+- [x] Token usage and cost tracking in side panel
+
+### Developer Tools (Slash Commands)
+- [x] `/search <pattern>` — cross-platform project search
+- [x] `/report` — generate project status report
+- [x] `/insights [day|week|month]` — development analytics
+- [x] `/config` / `/config edit` — view and edit configuration
+- [x] `/watch` — toggle file monitoring
+- [x] `/daemon status|start|stop` — background daemon
+- [x] `/session new|list|switch|save` — session management
+- [x] `/status`, `/diff`, `/files` — git/filesystem views
+
+### Security
+- [x] AES-256-CBC encrypted credential storage
+- [x] Machine-specific encryption key (hostname + username)
+- [x] Named key aliases (multiple keys per provider)
+- [x] No data leaves the machine — BYOK model
+
+### UX
+- [x] First-run onboarding wizard (9-step guided setup)
+- [x] Alt-screen buffer management (clean terminal on exit)
+- [x] Ctrl+C shows hint instead of exiting (use `/quit`)
+- [x] ASCII-only UI strings for Windows CMD/PowerShell compatibility
 
 ---
 
-## Security
+## Technical Decisions
 
-- API keys encrypted at rest with AES-256-CBC
-- Machine-specific key derivation (hostname + username)
-- Restrictive file permissions on credential storage
-- Code never transmitted — only semantic diffs sent to AI
-- BYOK architecture — user controls all costs
+| Decision | Rationale |
+|----------|-----------|
+| Ink over blessed | React paradigm, hooks, automatic re-renders |
+| sql.js over better-sqlite3 | No native compilation, WASM portability |
+| Global config (`~/.watcher/`) | One setup, works across all projects |
+| scrollBus EventEmitter | Ink pauses stdin between renders; pre-Ink listener survives |
+| esbuild over tsc for build | ~165kb output, fast builds, ESM native |
+| ASCII-only strings | Windows CMD/PowerShell encoding safety |
 
 ---
 
-**Status:** All six phases complete. Background daemon service operational.  
-**Build:** Zero TypeScript errors. All commands verified.
+## Build Output
+
+- **Bundle size:** ~165kb (esbuild, ESM)
+- **TypeScript errors:** 0
+- **Runtime:** Node.js >= 16
+- **Binary:** `watcher` (via `npm link` or global install)
+
+---
+
+## Distribution
+
+- **npm:** `npm install -g @AdiRajaaditya/watcher-cli`
+- **GitHub:** [github.com/AdiRajaaditya/watcher](https://github.com/AdiRajaaditya/watcher)
+- **Website:** [AdiRajaaditya.github.io/watcher](https://AdiRajaaditya.github.io/watcher)

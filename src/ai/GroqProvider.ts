@@ -11,7 +11,7 @@ export class GroqProvider extends AIProvider {
     }
   }
 
-  async analyze(prompt: string, systemPrompt?: string): Promise<AIResponse> {
+  async analyze(prompt: string, systemPrompt?: string, signal?: AbortSignal): Promise<AIResponse> {
     const messages: any[] = [];
 
     if (systemPrompt) {
@@ -34,7 +34,7 @@ export class GroqProvider extends AIProvider {
     };
 
     try {
-      const data = await this.makeRequest(`${this.baseURL}/chat/completions`, body, this.buildHeaders());
+      const data = await this.makeRequest(`${this.baseURL}/chat/completions`, body, this.buildHeaders(), signal);
 
       return {
         content: data.choices[0].message.content,

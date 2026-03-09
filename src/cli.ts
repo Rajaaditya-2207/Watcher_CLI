@@ -1,31 +1,20 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { displayBanner } from './ui/banner';
 import { runOnboarding } from './ui/onboarding';
 import { ConfigManager } from './config/ConfigManager';
-import { startChatMode } from './modes/chatMode';
-import { watchCommand } from './commands/watch';
-import { reportCommand } from './commands/report';
-import { insightsCommand } from './commands/insights';
-import { configCommand } from './commands/config';
 import { initCommand } from './commands/init';
-import { daemonCommand } from './commands/daemon';
-
-const NEON = chalk.hex('#39FF14');
+import { runUnifiedApp } from './modes/app';
 
 async function main(): Promise<void> {
-  // Display banner always
-  displayBanner();
-
   const args = process.argv.slice(2);
 
-  // If a subcommand is given, use Commander
-  if (args.length > 0) {
+  // Only 'init' remains as a standalone subcommand
+  if (args.length > 0 && args[0] === 'init') {
+    displayBanner();
     const program = new Command();
-
     program
       .name('watcher')
       .description('A CLI-based development observer that translates code changes into human-readable narratives')
@@ -38,79 +27,30 @@ async function main(): Promise<void> {
       .option('--config <path>', 'Custom config file path')
       .action(initCommand);
 
-    program
-      .command('watch')
-      .description('Start monitoring project changes')
-      .option('--interval <ms>', 'Watch interval in milliseconds', '5000')
-      .option('--verbose', 'Verbose output')
-      .action(watchCommand);
-
-    program
-      .command('report')
-      .description('Generate project status report')
-      .option('--format <type>', 'Output format: md, json', 'md')
-      .option('--since <date>', 'Include changes since date')
-      .option('--output <path>', 'Output file path')
-      .action(reportCommand);
-
-    program
-      .command('insights')
-      .description('View development analytics and metrics')
-      .option('--period <type>', 'Time period: day, week, month', 'week')
-      .option('--metric <name>', 'Specific metric to display')
-      .action(insightsCommand);
-
-    program
-      .command('config')
-      .description('Manage configuration and API keys')
-      .action(configCommand);
-
-    // Handle daemon command manually (uses subcommands)
-    if (args[0] === 'daemon') {
-      await daemonCommand(args.slice(1));
-      return;
-    }
-
     program.parse(process.argv);
     return;
   }
 
-  // Interactive mode — no subcommand given
+  // Interactive unified mode — all features accessible via slash commands
   const projectPath = process.cwd();
   const configManager = new ConfigManager(projectPath);
 
   // Check if configured
   if (!configManager.exists()) {
+    console.clear();
+    displayBanner();
     await runOnboarding(projectPath);
   }
 
-  // Mode selection
-  const { mode } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'mode',
-      message: 'Select mode:',
-      choices: [
-        {
-          name: NEON('Chat Mode') + chalk.dim('    — Talk to the AI agent about your repository'),
-          value: 'chat',
-        },
-        {
-          name: NEON('Watch Mode') + chalk.dim('   — Auto-monitor and log development progress'),
-          value: 'watch',
-        },
-      ],
-    },
-  ]);
-
-  if (mode === 'chat') {
-    await startChatMode(projectPath);
-  } else {
-    await watchCommand({ verbose: false });
-  }
+  await runUnifiedApp(projectPath);
 }
 
 main().catch((error) => {
-  console.error(chalk.red(`[x] Fatal error: ${error.message}`));
+  try { process.stdout.write('\x1b[?1049l'); } catch {}
+  try { process.stdout.write('\x1b[?25h'); } catch {}
+  console.error(chalk.red(`\n[x] Fatal error: ${error.message}`));
+  if (process.env.DEBUG) {
+    console.error(error.stack);
+  }
   process.exit(1);
 });
