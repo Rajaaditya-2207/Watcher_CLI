@@ -68,29 +68,93 @@
       </div>
     </div>
 
-    <div class="hero-terminal">
-      <div class="terminal-bar">
-        <span class="terminal-dot red"></span>
-        <span class="terminal-dot yellow"></span>
-        <span class="terminal-dot green"></span>
-        <span class="terminal-title">watcher</span>
+    <div class="tui-mockup">
+      <div class="tui-titlebar">
+        <span class="tui-titlebar-icon">&#9638;</span>
+        <span class="tui-titlebar-text">Watcher</span>
+        <span class="tui-titlebar-controls">
+          <span class="tui-ctrl">&#9472;</span>
+          <span class="tui-ctrl">&#9633;</span>
+          <span class="tui-ctrl tui-close">&times;</span>
+        </span>
       </div>
-      <pre class="terminal-body"><span class="t-green">&#9670; Watcher</span> <span class="t-dim">v0.1.0</span>
-
-<span class="t-dim">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
-<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> File monitoring active                         <span class="t-dim">&#9474;</span>
-<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> AI analysis ready <span class="t-dim">(Claude 3.5 Sonnet)</span>          <span class="t-dim">&#9474;</span>
-<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> Auto-documentation enabled                     <span class="t-dim">&#9474;</span>
-<span class="t-dim">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
-
-<span class="t-cyan">you:</span> What changes were made today?
-
-<span class="t-green">watcher:</span> Today you refactored the auth module,
-  added input validation to 3 API endpoints,
-  and fixed a race condition in the WebSocket handler.
-  <span class="t-dim">12 files changed, 847 insertions, 203 deletions.</span>
-
-<span class="t-dim blink">&#9608;</span></pre>
+      <div class="tui-body">
+        <div class="tui-left">
+          <pre class="tui-banner">
+ &#9608;   &#9608; &#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;  &#9608;  &#9608; &#9608;&#9608;&#9608;&#9608; &#9608;&#9608;&#9608;
+ &#9608;   &#9608; &#9608;  &#9608;   &#9608;   &#9608;    &#9608;&#9608; &#9608; &#9608;    &#9608; &#9608;
+ &#9608; &#9608; &#9608; &#9608;&#9608;&#9608;&#9608;   &#9608;   &#9608;    &#9608; &#9608;&#9608; &#9608;&#9608;&#9608;  &#9608;&#9608;
+ &#9608;&#9608; &#9608;&#9608; &#9608;  &#9608;   &#9608;   &#9608;    &#9608;  &#9608; &#9608;    &#9608; &#9608;
+  &#9608;   &#9608;  &#9608;  &#9608;   &#9608;    &#9608;&#9608;&#9608; &#9608;  &#9608; &#9608;&#9608;&#9608;&#9608; &#9608;  &#9608;</pre>
+          <div class="tui-info">
+            <span class="t-dim">Silent Observer. Intelligent Documentation.</span><br>
+            <span class="t-dim">v0.1.0 | Team KREONYX</span>
+          </div>
+          <div class="tui-info">
+            <span class="t-dim">Project:</span> <span class="t-green">MyProject</span><br>
+            <span class="t-dim">E:\Projects\MyProject</span>
+          </div>
+          <div class="tui-info">
+            <span class="t-dim">Provider: openrouter  Model: claude-3.5-sonnet</span>
+          </div>
+          <div class="tui-info">
+            <span class="t-dim">Type a message or press / for commands</span>
+          </div>
+          <div class="tui-palette">
+            <div class="tui-palette-item active">/quit <span class="t-dim">Exit Watcher</span></div>
+            <div class="tui-palette-item">/config edit <span class="t-dim">Change provider, model, or API key</span></div>
+            <div class="tui-palette-item">/clear <span class="t-dim">Clear chat history</span></div>
+            <div class="tui-palette-item">/session new <span class="t-dim">Start a new chat session</span></div>
+            <div class="tui-palette-item">/session list <span class="t-dim">List all saved sessions</span></div>
+            <div class="tui-palette-item">/search <span class="t-dim">Search project source files</span></div>
+            <div class="tui-palette-item">/report <span class="t-dim">Generate project status report</span></div>
+            <div class="tui-palette-item">/insights <span class="t-dim">Development analytics</span></div>
+            <div class="tui-palette-item">/status <span class="t-dim">Show git repository status</span></div>
+          </div>
+          <div class="tui-input">
+            <span class="tui-cursor blink">&#9608;</span>
+          </div>
+        </div>
+        <div class="tui-right">
+          <div class="tui-panel">
+            <div class="tui-panel-header">Status Dashboard</div>
+            <div class="tui-panel-section">
+              <span class="tui-panel-label">Project</span>
+              <span>MyProject</span><br>
+              <span class="t-dim">main</span>
+            </div>
+            <div class="tui-panel-section">
+              <span class="tui-panel-label">Session</span>
+              <span class="t-dim">3/9/2026, 12:51 am</span><br>
+              <span class="t-dim">Changes: 0</span><br>
+              <span class="t-dim">Analyses: 0</span><br>
+              <span class="t-dim">Tokens: 0</span><br>
+              <span class="t-dim">Est Cost: ~$0.0000</span>
+            </div>
+            <div class="tui-panel-section">
+              <span class="tui-panel-label">AI Provider</span>
+              <span>openrouter</span><br>
+              <span class="t-dim">claude-3.5-sonnet</span>
+            </div>
+            <div class="tui-panel-section">
+              <span class="tui-panel-label">Features</span>
+              <span>Auto Docs: On</span>
+            </div>
+            <div class="tui-panel-divider"></div>
+            <div class="tui-panel-section">
+              <span class="t-dim">Recent Activity:</span>
+            </div>
+            <div class="tui-panel-section">
+              <span class="tui-panel-label">Activity</span>
+              <span class="t-dim">12:51 am</span> <span class="t-green">&#10003; Monitor active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tui-statusbar">
+        <span class="t-green">Watcher</span>&nbsp;&nbsp;claude-3.5-sonnet&nbsp;&nbsp;openrouter&nbsp;&nbsp;&nbsp;
+        <span class="t-dim">/ cmds&nbsp;&nbsp;ctrl+n new&nbsp;&nbsp;ctrl+a sessions&nbsp;&nbsp;ctrl+l clear&nbsp;&nbsp;ctrl+c quit</span>
+      </div>
     </div>
   </section>
 

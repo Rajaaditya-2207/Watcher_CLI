@@ -201,52 +201,182 @@ code {
   border-color: var(--green);
 }
 
-/* ========== TERMINAL ========== */
-.hero-terminal {
-  max-width: 640px;
+/* ========== TUI MOCKUP ========== */
+.tui-mockup {
+  max-width: 960px;
   margin: 0 auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid #333;
+  border-radius: 8px;
   overflow: hidden;
-  background: #0d0d0d;
+  background: #0c0c0c;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 60px var(--green-glow);
   text-align: left;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text);
 }
 
-.terminal-bar {
+/* Title bar */
+.tui-titlebar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #141414;
-  border-bottom: 1px solid var(--border);
+  padding: 6px 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  gap: 10px;
 }
 
-.terminal-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+.tui-titlebar-icon {
+  color: var(--green);
+  font-size: 0.9rem;
 }
 
-.terminal-dot.red { background: #ff5f57; }
-.terminal-dot.yellow { background: #febc2e; }
-.terminal-dot.green { background: #28c840; }
-
-.terminal-title {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-
-.terminal-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  line-height: 1.6;
+.tui-titlebar-text {
   color: var(--text);
-  overflow-x: auto;
+  font-size: 0.8rem;
 }
 
+.tui-titlebar-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+.tui-ctrl {
+  color: #666;
+  font-size: 0.9rem;
+  cursor: default;
+}
+
+.tui-close { color: #888; }
+
+/* Body layout */
+.tui-body {
+  display: flex;
+  min-height: 340px;
+}
+
+.tui-left {
+  flex: 7;
+  padding: 12px 16px;
+  border-right: 1px solid #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.tui-right {
+  flex: 3;
+  padding: 0;
+  min-width: 200px;
+}
+
+/* Banner */
+.tui-banner {
+  color: var(--green);
+  font-size: 0.65rem;
+  line-height: 1.2;
+  text-align: center;
+  margin: 4px 0 8px;
+  text-shadow: 0 0 8px var(--green-glow);
+}
+
+/* Info lines */
+.tui-info {
+  text-align: center;
+  font-size: 0.78rem;
+  padding: 2px 0;
+}
+
+/* Command palette */
+.tui-palette {
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.tui-palette-item {
+  padding: 3px 10px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tui-palette-item.active {
+  background: var(--green);
+  color: #000;
+}
+
+.tui-palette-item.active .t-dim {
+  color: #1a4a10;
+}
+
+/* Input area */
+.tui-input {
+  border: 1px solid #2266cc;
+  border-radius: 3px;
+  padding: 4px 10px;
+  margin-top: 4px;
+  min-height: 20px;
+}
+
+.tui-cursor {
+  color: var(--green);
+}
+
+/* Right panel */
+.tui-panel {
+  border: 1px solid var(--green);
+  margin: 8px;
+  border-radius: 4px;
+  padding: 6px 10px;
+  height: calc(100% - 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tui-panel-header {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.tui-panel-label {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.76rem;
+  display: block;
+}
+
+.tui-panel-section {
+  font-size: 0.74rem;
+  padding: 2px 0;
+}
+
+.tui-panel-divider {
+  border-top: 1px solid #333;
+  margin: 4px 0;
+}
+
+/* Status bar */
+.tui-statusbar {
+  padding: 4px 12px;
+  background: #111;
+  border-top: 1px solid #333;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Shared helpers */
 .t-green { color: var(--green); }
 .t-cyan { color: #00d4ff; }
 .t-dim { color: #555; }
@@ -257,6 +387,14 @@ code {
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+/* TUI responsive */
+@media (max-width: 640px) {
+  .tui-right { display: none; }
+  .tui-left { border-right: none; }
+  .tui-banner { font-size: 0.5rem; }
+  .tui-body { min-height: 260px; }
 }
 
 /* ========== SECTIONS ========== */
