@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watcher CLI — AI-Powered Development Observer</title>
+  <meta name="description" content="A CLI-based development observer that translates code changes into human-readable narratives. Monitor codebases in real-time with AI.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">&#9670;</span> Watcher
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/Rajaaditya-2207/Watcher_CLI" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Open Source &middot; MIT License</div>
+    <h1 class="hero-title">
+      The AI-powered<br><span class="glow">development observer</span>
+    </h1>
+    <p class="hero-sub">
+      Monitor codebases in real-time. Analyze changes with AI.<br>
+      Auto-generate documentation. All from your terminal.
+    </p>
+
+    <div class="install-box" id="install">
+      <div class="install-tabs">
+        <button class="install-tab active" data-target="tab-npm">npm</button>
+        <button class="install-tab" data-target="tab-npx">npx</button>
+        <button class="install-tab" data-target="tab-git">git</button>
+      </div>
+      <div class="install-panels">
+        <div class="install-panel active" id="tab-npm">
+          <code>npm install -g @AdiRajaaditya/watcher-cli</code>
+          <button class="copy-btn" aria-label="Copy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <div class="install-panel" id="tab-npx">
+          <code>npx @AdiRajaaditya/watcher-cli</code>
+          <button class="copy-btn" aria-label="Copy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <div class="install-panel" id="tab-git">
+          <code>git clone https://github.com/Rajaaditya-2207/Watcher_CLI.git</code>
+          <button class="copy-btn" aria-label="Copy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">watcher</span>
+      </div>
+      <pre class="terminal-body"><span class="t-green">&#9670; Watcher</span> <span class="t-dim">v0.1.0</span>
+
+<span class="t-dim">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
+<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> File monitoring active                         <span class="t-dim">&#9474;</span>
+<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> AI analysis ready <span class="t-dim">(Claude 3.5 Sonnet)</span>          <span class="t-dim">&#9474;</span>
+<span class="t-dim">&#9474;</span> <span class="t-green">&#10004;</span> Auto-documentation enabled                     <span class="t-dim">&#9474;</span>
+<span class="t-dim">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="t-cyan">you:</span> What changes were made today?
+
+<span class="t-green">watcher:</span> Today you refactored the auth module,
+  added input validation to 3 API endpoints,
+  and fixed a race condition in the WebSocket handler.
+  <span class="t-dim">12 files changed, 847 insertions, 203 deletions.</span>
+
+<span class="t-dim blink">&#9608;</span></pre>
+    </div>
+  </section>
+
+  <!-- WHAT IS WATCHER -->
+  <section class="section" id="what">
+    <div class="section-inner">
+      <h2 class="section-label">What is Watcher?</h2>
+      <h3 class="section-title">Your silent technical writer</h3>
+      <p class="section-desc">
+        Watcher monitors your codebase in real-time, analyzes every change using AI,
+        and auto-generates documentation. It runs entirely in your terminal &mdash;
+        no browser, no cloud dashboard. Just a powerful CLI that understands your code.
+      </p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section section-dark" id="features">
+    <div class="section-inner">
+      <h2 class="section-label">Features</h2>
+      <h3 class="section-title">Everything you need, nothing you don't</h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#9670;</div>
+          <h4>Real-time Monitoring</h4>
+          <p>Watches your entire project tree for changes with configurable ignore patterns.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9733;</div>
+          <h4>AI-Powered Analysis</h4>
+          <p>Semantic code analysis via AWS Bedrock, OpenRouter, or Groq. Understands what your changes mean.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9998;</div>
+          <h4>Auto Documentation</h4>
+          <p>Generates PROGRESS.md and CHANGELOG.md automatically from your code changes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128172;</div>
+          <h4>Interactive Chat</h4>
+          <p>Ask questions about your codebase. The AI agent uses tools to inspect files, git, and shell.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9881;</div>
+          <h4>Multi-Provider</h4>
+          <p>AWS Bedrock, OpenRouter (Claude, GPT-4, Gemini), and Groq. Bring your own API key.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128202;</div>
+          <h4>Analytics Dashboard</h4>
+          <p>Velocity metrics, file hotspots, technical debt tracking, and development timelines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9000;</div>
+          <h4>Terminal-Native TUI</h4>
+          <p>Beautiful Ink + React terminal UI with mouse scroll, slash commands, and keyboard navigation.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128274;</div>
+          <h4>Encrypted Credentials</h4>
+          <p>API keys stored with AES-256-CBC encryption using machine-specific keys.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMANDS -->
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-label">Slash Commands</h2>
+      <h3 class="section-title">Your toolkit, built in</h3>
+      <div class="commands-grid">
+        <div class="command"><code>/config edit</code><span>Interactive config editor</span></div>
+        <div class="command"><code>/search &lt;pattern&gt;</code><span>Search project files</span></div>
+        <div class="command"><code>/report</code><span>Generate status report</span></div>
+        <div class="command"><code>/insights</code><span>Development analytics</span></div>
+        <div class="command"><code>/watch</code><span>Toggle file monitoring</span></div>
+        <div class="command"><code>/session new</code><span>Start new chat session</span></div>
+        <div class="command"><code>/daemon start</code><span>Background monitoring</span></div>
+        <div class="command"><code>/diff</code><span>View git changes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="section section-dark" id="privacy">
+    <div class="section-inner privacy-section">
+      <div class="privacy-content">
+        <h2 class="section-label">Security</h2>
+        <h3 class="section-title">Built for privacy first</h3>
+        <p class="section-desc">
+          Watcher runs entirely on your machine. Your code never leaves your computer.
+          API keys are encrypted with AES-256-CBC using machine-specific keys derived
+          from your hostname and username. No telemetry. No cloud. No tracking.
+        </p>
+        <ul class="privacy-list">
+          <li><span class="check">&#10003;</span> BYOK &mdash; Bring Your Own Key</li>
+          <li><span class="check">&#10003;</span> AES-256-CBC encrypted credential storage</li>
+          <li><span class="check">&#10003;</span> No data transmitted to third parties</li>
+          <li><span class="check">&#10003;</span> Machine-specific encryption keys</li>
+          <li><span class="check">&#10003;</span> Open source &mdash; audit the code yourself</li>
+        </ul>
+      </div>
+      <div class="privacy-visual">
+        <div class="lock-icon">&#128274;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section stats-section">
+    <div class="section-inner">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value">3</div>
+          <div class="stat-label">AI Providers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">75+</div>
+          <div class="stat-label">Models Supported</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">20+</div>
+          <div class="stat-label">Slash Commands</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">~165kb</div>
+          <div class="stat-label">Bundle Size</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-dark" id="faq">
+    <div class="section-inner faq-section">
+      <h2 class="section-label">FAQ</h2>
+      <h3 class="section-title">Frequently asked questions</h3>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What is Watcher?</summary>
+          <p>Watcher is a CLI-based development observer that monitors your codebase in real-time, analyzes changes using AI, and auto-generates documentation like PROGRESS.md and CHANGELOG.md.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I install it?</summary>
+          <p>Run <code>npm install -g @AdiRajaaditya/watcher-cli</code> and then type <code>watcher</code> in any project directory. The first-run wizard will guide you through setup.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do I need an AI subscription?</summary>
+          <p>Yes, you need an API key from one of the supported providers: AWS Bedrock, OpenRouter, or Groq. Watcher uses a BYOK (Bring Your Own Key) model &mdash; no built-in API costs.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Which AI models are supported?</summary>
+          <p>Through OpenRouter: Claude, GPT-4, Gemini, Llama, and 70+ more. Through Groq: fast Llama inference. Through AWS Bedrock: any model enabled in your Bedrock console.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is my code sent to the cloud?</summary>
+          <p>Only the code diffs are sent to your chosen AI provider for analysis. Watcher itself stores nothing in the cloud. All data stays on your machine.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Does it work on Windows?</summary>
+          <p>Yes. Watcher works on Windows, macOS, and Linux. The TUI uses ASCII-only strings for full Windows CMD/PowerShell compatibility.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is it open source?</summary>
+          <p>Yes, Watcher is fully open source under the MIT License. You can audit, fork, and contribute to the code on GitHub.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How much does it cost?</summary>
+          <p>Watcher is free. You only pay for AI API usage from your chosen provider (OpenRouter, Groq, or AWS Bedrock).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section">
+    <div class="section-inner">
+      <h3 class="section-title">Ready to start?</h3>
+      <p class="section-desc">Install Watcher and let AI document your code.</p>
+      <div class="cta-install">
+        <code>npm install -g @AdiRajaaditya/watcher-cli</code>
+      </div>
+      <div class="cta-links">
+        <a href="https://github.com/Rajaaditya-2207/Watcher_CLI" class="btn btn-primary" target="_blank" rel="noopener">View on GitHub</a>
+        <a href="https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli" class="btn btn-secondary" target="_blank" rel="noopener">View on npm</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">&#9670;</span> Watcher
+        <span class="footer-copy">&copy; 2025 Team KREONYX</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/Rajaaditya-2207/Watcher_CLI" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli" target="_blank" rel="noopener">npm</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

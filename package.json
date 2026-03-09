@@ -1,5 +1,5 @@
 {
-  "name": "@AdiRajaaditya/watcher-cli",
+  "name": "watcher-cli",
   "version": "0.1.0",
   "description": "A CLI-based development observer that translates code changes into human-readable narratives",
   "type": "module",
