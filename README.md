@@ -19,7 +19,7 @@
 **A CLI development observer that translates code changes into human-readable narratives.**
 **Your AI-powered silent technical writer — right in the terminal.**
 
-[Website](https://AdiRajaaditya.github.io/watcher) · [npm](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli) · [GitHub](https://github.com/AdiRajaaditya/watcher)
+[Website](https://Rajaaditya-2207.github.io/Watcher_CLI) · [npm](https://www.npmjs.com/package/@AdiRajaaditya/watcher-cli) · [GitHub](https://github.com/Rajaaditya-2207/Watcher_CLI)
 
 </div>
 
@@ -199,7 +199,7 @@ Config is stored globally at `~/.watcher/config.json`:
 ## Development
 
 ```bash
-git clone https://github.com/AdiRajaaditya/watcher.git
+git clone https://github.com/Rajaaditya-2207/Watcher_CLI.git
 cd watcher
 npm install
 npm run build        # esbuild → dist/
