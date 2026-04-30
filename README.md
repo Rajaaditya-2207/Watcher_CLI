@@ -38,7 +38,7 @@ watcher
 ```
 
 On first run, Watcher guides you through a one-time global setup:
-1. **Select AI provider** — AWS Bedrock, OpenRouter, or Groq
+1. **Select AI provider** — Anthropic, Gemini, OpenAI, Ollama, LM Studio, Llama.cpp, AWS Bedrock, OpenRouter, or Groq
 2. **Enter API key** — encrypted with AES-256-CBC (skipped for Bedrock)
 3. **Pick your model** — fetched live from the provider API
 4. **Configure features** — auto-docs, tech debt, analytics
@@ -75,7 +75,7 @@ Watcher is your **silent technical writer**. It monitors your codebase in real-t
 | **AI Chat** | Ask questions about your codebase, git status, architecture — with agentic tool access |
 | **Auto Documentation** | Maintains `PROGRESS.md` and `CHANGELOG.md` as you code |
 | **Semantic Analysis** | AI understands architectural patterns, not just syntax diffs |
-| **Multi-Provider** | AWS Bedrock, OpenRouter (Claude/GPT-4/Gemini/Llama), Groq |
+| **Multi-Provider** | Anthropic, Gemini, OpenAI, Local LLMs (Ollama, LM Studio, Llama.cpp), AWS Bedrock, OpenRouter, Groq |
 | **Dynamic Models** | Fetches available models from your provider's API at runtime |
 | **BYOK Privacy** | Bring Your Own Key — your code never leaves your machine |
 | **Encrypted Credentials** | AES-256-CBC with machine-specific key derivation |
@@ -149,7 +149,7 @@ All commands are available inside the unified TUI by typing `/`:
 | CLI | Commander.js |
 | Database | SQLite via sql.js (WASM, no native deps) |
 | File Monitoring | Chokidar |
-| AI Providers | OpenRouter, Groq, AWS Bedrock |
+| AI Providers | Anthropic, Gemini, OpenAI, Local LLMs, OpenRouter, Groq, AWS Bedrock |
 | Security | AES-256-CBC encrypted credentials |
 
 ---
@@ -160,8 +160,8 @@ Config is stored globally at `~/.watcher/config.json`:
 
 ```json
 {
-  "aiProvider": "bedrock",
-  "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "aiProvider": "anthropic",
+  "model": "claude-3-5-sonnet-latest",
   "watchInterval": 5000,
   "ignorePatterns": ["node_modules/**", "dist/**", ".git/**", "*.log"],
   "features": {
