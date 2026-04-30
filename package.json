@@ -1,6 +1,6 @@
 {
   "name": "@kreonyx/watcher-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A CLI-based development observer that translates code changes into human-readable narratives",
   "type": "module",
   "main": "dist/index.js",
