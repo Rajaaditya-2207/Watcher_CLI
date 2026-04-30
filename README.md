@@ -19,7 +19,7 @@
 **A CLI development observer that translates code changes into human-readable narratives.**
 **Your AI-powered silent technical writer — right in the terminal.**
 
-[Website](https://Rajaaditya-2207.github.io/Watcher_CLI) · [npm](https://www.npmjs.com/package/@kreonyx/watcher-cli) · [GitHub](https://github.com/Rajaaditya-2207/Watcher_CLI)
+[Website](https://watcher-cli.vercel.app/) · [npm](https://www.npmjs.com/package/@kreonyx/watcher-cli) · [GitHub](https://github.com/Rajaaditya-2207/Watcher_CLI)
 
 </div>
 
