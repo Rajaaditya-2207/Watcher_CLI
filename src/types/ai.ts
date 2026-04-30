@@ -1,5 +1,5 @@
 export interface AIProviderConfig {
-  provider: 'openrouter' | 'bedrock' | 'groq';
+  provider: 'anthropic' | 'gemini' | 'openai' | 'ollama' | 'lmstudio' | 'llamacpp' | 'openrouter' | 'bedrock' | 'groq';
   apiKey: string;
   model: string;
   baseURL?: string;

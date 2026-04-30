@@ -9,8 +9,8 @@ const GLOBAL_CONFIG = path.join(GLOBAL_DIR, 'config.json');
 export class ConfigManager {
   private configPath: string;
   private defaultConfig: WatcherConfig = {
-    aiProvider: 'openrouter',
-    model: 'anthropic/claude-3-sonnet',
+    aiProvider: 'anthropic',
+    model: 'claude-3-5-sonnet-latest',
     watchInterval: 5000,
     ignorePatterns: [
       'node_modules/**',

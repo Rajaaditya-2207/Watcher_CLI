@@ -1,4 +1,4 @@
-﻿import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput } from 'ink';
 import type { WatcherConfig } from '../../types/index.js';
 import { COLORS } from '../theme.js';
@@ -17,7 +17,7 @@ interface ConfigField {
 const CONFIG_FIELDS: ConfigField[] = [
     {
         key: 'aiProvider', label: 'AI Provider', type: 'enum',
-        options: ['openrouter', 'groq', 'bedrock'],
+        options: ['anthropic', 'gemini', 'openai', 'ollama', 'lmstudio', 'llamacpp', 'openrouter', 'groq', 'bedrock'],
         get: c => c.aiProvider,
         set: (c, v) => ({ ...c, aiProvider: v }),
     },
@@ -278,9 +278,14 @@ export function ConfigEditor({ config, apiKeyIsSet, onSave, onCancel, fetchModel
                     } else if (apiKeyBuffer) {
                         displayValue = <Text color={COLORS.yellow}>{'(new key staged - save to apply)'}</Text>;
                     } else {
-                        displayValue = keyStatus
-                            ? <Text color={COLORS.neon}>{'(set)'}</Text>
-                            : <Text color={COLORS.red}>{'(not set)'}</Text>;
+                        const isLocal = ['ollama', 'lmstudio', 'llamacpp'].includes(editConfig.aiProvider);
+                        if (isLocal) {
+                            displayValue = <Text color={COLORS.dimWhite}>{'(not required)'}</Text>;
+                        } else {
+                            displayValue = keyStatus
+                                ? <Text color={COLORS.neon}>{'(set)'}</Text>
+                                : <Text color={COLORS.red}>{'(not set)'}</Text>;
+                        }
                     }
                     if (isSel && !isEditing) hint = ' (Enter to edit)';
                 } else if (isEditing) {

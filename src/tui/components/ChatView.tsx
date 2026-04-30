@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Box, Text } from 'ink';
 import Spinner from 'ink-spinner';
 import chalk from 'chalk';
@@ -27,20 +27,31 @@ interface ChatViewProps {
     height: number;
     width: number;
     scrollOffset: number;
+    autoScroll?: boolean;
+    onMaxScrollChange?: (maxScroll: number) => void;
 }
 
 /**
  * Scrollable chat view.
  * Renders messages with grey background boxes, timestamps, and gaps between them.
  */
-export function ChatView({ messages, isThinking, height, width, scrollOffset }: ChatViewProps) {
+export function ChatView({ messages, isThinking, height, width, scrollOffset, autoScroll = true, onMaxScrollChange }: ChatViewProps) {
     const boxWidth = Math.max(40, width - 4); // usable width inside the chat area
     const lines = renderAllMessages(messages, boxWidth);
     const totalLines = lines.length + (isThinking ? 2 : 0);
 
     // Calculate visible window
     const maxScroll = Math.max(0, totalLines - height);
-    const actualOffset = Math.min(Math.max(0, scrollOffset), maxScroll);
+
+    // Report maxScroll to parent so it can set correct scrollOffset for manual scrolling
+    if (onMaxScrollChange) {
+        onMaxScrollChange(maxScroll);
+    }
+
+    // When autoScroll is true, always show the bottom; otherwise use the provided offset
+    const actualOffset = autoScroll
+        ? maxScroll
+        : Math.min(Math.max(0, scrollOffset), maxScroll);
 
     // Add thinking indicator at the end
     const allLines = [...lines];
@@ -92,7 +103,13 @@ function renderAllMessages(messages: ChatMessage[], width: number): string[] {
         if (msg.role === 'user') {
             renderUserMessage(lines, msg, width, contentWidth);
         } else if (msg.role === 'tool') {
-            lines.push(`  ${msg.content}`);
+            const toolLines = msg.content.split('\n');
+            for (const tl of toolLines) {
+                const wrappedTool = wrapText(tl, Math.max(20, width - 4));
+                for (const wtl of wrappedTool) {
+                    lines.push(`  ${wtl}`);
+                }
+            }
         } else if (msg.role === 'assistant') {
             renderAssistantMessage(lines, msg, width, contentWidth);
         }
@@ -205,7 +222,10 @@ function formatAssistantContent(content: string, wrapWidth: number): string[] {
         }
 
         if (inCodeBlock) {
-            formatted.push(`   ${DIM_GREEN('\u2502')} ${NEON(line)}`);
+            const codeLines = forceWrapAnsi(line, Math.max(10, wrapWidth - 5));
+            for (const cl of codeLines) {
+                formatted.push(`   ${DIM_GREEN('\u2502')} ${NEON(cl)}`);
+            }
             continue;
         }
 
@@ -333,6 +353,22 @@ function wrapText(text: string, maxWidth: number): string[] {
 
     for (const word of words) {
         const wordVis = stripAnsi(word).length;
+        
+        if (wordVis > maxWidth) {
+            if (line) {
+                result.push(line);
+                line = '';
+                visLen = 0;
+            }
+            const hardWrapped = forceWrapAnsi(word, maxWidth);
+            for (let i = 0; i < hardWrapped.length - 1; i++) {
+                result.push(hardWrapped[i]);
+            }
+            line = hardWrapped[hardWrapped.length - 1];
+            visLen = stripAnsi(line).length;
+            continue;
+        }
+
         if (visLen + wordVis + 1 > maxWidth && visLen > 0) {
             result.push(line);
             line = word;
@@ -344,6 +380,44 @@ function wrapText(text: string, maxWidth: number): string[] {
     }
     if (line) result.push(line);
     return result;
+}
+
+function forceWrapAnsi(text: string, maxWidth: number): string[] {
+    const lines: string[] = [];
+    let currentLine = '';
+    let currentLen = 0;
+    
+    let i = 0;
+    while (i < text.length) {
+        if (text[i] === '\x1b') {
+            let escapeSeq = '\x1b';
+            i++;
+            while (i < text.length && text[i] !== 'm') {
+                escapeSeq += text[i];
+                i++;
+            }
+            if (i < text.length) {
+                escapeSeq += text[i];
+                i++;
+            }
+            currentLine += escapeSeq;
+            continue;
+        }
+        
+        currentLine += text[i];
+        currentLen++;
+        i++;
+        
+        if (currentLen >= maxWidth) {
+            lines.push(currentLine + '\x1b[0m');
+            currentLine = '';
+            currentLen = 0;
+        }
+    }
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+    return lines;
 }
 
 function stripAnsi(str: string): string {

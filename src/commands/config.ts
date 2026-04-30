@@ -301,14 +301,16 @@ async function changeModel(
   const config = await configManager.load();
   const apiKey = await credentialManager.getApiKey(config.aiProvider, config.keyAlias);
 
-  if (!apiKey) {
+  const isLocal = ['ollama', 'lmstudio', 'llamacpp'].includes(config.aiProvider);
+
+  if (!apiKey && !isLocal) {
     logger.error('API key not found. Please add one first.');
     return;
   }
 
   logger.startSpinner('Fetching available models...');
   try {
-    const models = await fetchModels(config.aiProvider, apiKey);
+    const models = await fetchModels(config.aiProvider, apiKey || '');
     logger.stopSpinner(true, `Found ${models.length} models.`);
 
     const selectedModel = await promptModelSelection(models);
@@ -336,7 +338,9 @@ async function testConnection(
 
   const apiKey = await credentialManager.getApiKey(provider, keyAlias);
 
-  if (!apiKey) {
+  const isLocal = ['ollama', 'lmstudio', 'llamacpp'].includes(provider);
+
+  if (!apiKey && !isLocal) {
     logger.error('API key not found. Please set it first.');
     return;
   }
@@ -346,7 +350,7 @@ async function testConnection(
   try {
     const aiProvider = AIProviderFactory.create({
       provider: provider as any,
-      apiKey,
+      apiKey: apiKey || 'local',
       model,
     });
 
@@ -399,7 +403,13 @@ async function changeProvider(
       name: 'provider',
       message: 'Select new AI provider:',
       choices: [
-        { name: NEON('AWS Bedrock') + chalk.dim(' — Claude 4.6, Titan, Llama via AWS'), value: 'bedrock' },
+        { name: NEON('Anthropic') + chalk.dim(' — Claude 3.5 Sonnet, Haiku, Opus'), value: 'anthropic' },
+        { name: NEON('Gemini') + chalk.dim(' — Gemini 1.5 Pro, Flash'), value: 'gemini' },
+        { name: NEON('OpenAI') + chalk.dim(' — GPT-4o, GPT-3.5'), value: 'openai' },
+        { name: NEON('Ollama') + chalk.dim(' — Run local models (localhost:11434)'), value: 'ollama' },
+        { name: NEON('LM Studio') + chalk.dim(' — Run local models (localhost:1234)'), value: 'lmstudio' },
+        { name: NEON('Llama.cpp') + chalk.dim(' — Run local models (localhost:8080)'), value: 'llamacpp' },
+        { name: NEON('AWS Bedrock') + chalk.dim(' — Claude, Titan, Llama via AWS'), value: 'bedrock' },
         { name: NEON('OpenRouter') + chalk.dim(' — Claude, GPT-4, Gemini, Llama & more'), value: 'openrouter' },
         { name: NEON('Groq') + chalk.dim(' — Ultra-fast inference with Llama models'), value: 'groq' },
       ],
@@ -409,55 +419,59 @@ async function changeProvider(
 
   config.aiProvider = provider;
 
-  // Check for existing keys
-  const aliases = await credentialManager.listKeyAliases(provider);
-
+  const isLocal = ['ollama', 'lmstudio', 'llamacpp'].includes(provider);
   let keyAlias = 'default';
-  if (aliases.length > 0) {
-    logger.info(`Found saved keys for ${provider}: ${aliases.map((a) => NEON(a)).join(', ')}`);
-    const { useExisting } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'useExisting',
-        message: 'Use an existing key?',
-        default: true,
-      },
-    ]);
 
-    if (useExisting) {
-      if (aliases.length === 1) {
-        keyAlias = aliases[0];
+  if (!isLocal) {
+    // Check for existing keys
+    const aliases = await credentialManager.listKeyAliases(provider);
+
+    if (aliases.length > 0) {
+      logger.info(`Found saved keys for ${provider}: ${aliases.map((a) => NEON(a)).join(', ')}`);
+      const { useExisting } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'useExisting',
+          message: 'Use an existing key?',
+          default: true,
+        },
+      ]);
+
+      if (useExisting) {
+        if (aliases.length === 1) {
+          keyAlias = aliases[0];
+        } else {
+          const { alias } = await inquirer.prompt([
+            {
+              type: 'list',
+              name: 'alias',
+              message: 'Select API key:',
+              choices: aliases.map((a) => ({ name: a, value: a })),
+            },
+          ]);
+          keyAlias = alias;
+        }
       } else {
-        const { alias } = await inquirer.prompt([
-          {
-            type: 'list',
-            name: 'alias',
-            message: 'Select API key:',
-            choices: aliases.map((a) => ({ name: a, value: a })),
-          },
-        ]);
-        keyAlias = alias;
+        await addApiKey(provider, configManager, credentialManager);
+        const updatedAliases = await credentialManager.listKeyAliases(provider);
+        keyAlias = updatedAliases[updatedAliases.length - 1] || 'default';
       }
     } else {
+      logger.warn('No API key saved for this provider.');
       await addApiKey(provider, configManager, credentialManager);
       const updatedAliases = await credentialManager.listKeyAliases(provider);
       keyAlias = updatedAliases[updatedAliases.length - 1] || 'default';
     }
-  } else {
-    logger.warn('No API key saved for this provider.');
-    await addApiKey(provider, configManager, credentialManager);
-    const updatedAliases = await credentialManager.listKeyAliases(provider);
-    keyAlias = updatedAliases[updatedAliases.length - 1] || 'default';
   }
 
   config.keyAlias = keyAlias;
 
   // Fetch models with the selected key and let user pick
   const apiKey = await credentialManager.getApiKey(provider, keyAlias);
-  if (apiKey) {
+  if (apiKey || isLocal) {
     logger.startSpinner('Fetching available models...');
     try {
-      const models = await fetchModels(provider, apiKey);
+      const models = await fetchModels(provider, apiKey || '');
       logger.stopSpinner(true, `Found ${models.length} models.`);
       config.model = await promptModelSelection(models);
     } catch (error: any) {

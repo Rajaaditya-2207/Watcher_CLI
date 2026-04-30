@@ -93,6 +93,8 @@ function WatcherApp(props: AppProps) {
     const [isThinking, setIsThinking] = useState(false);
     const [showBanner, setShowBanner] = useState(true);
     const [scrollOffset, setScrollOffset] = useState(0);
+    const autoScrollRef = useRef(true);
+    const maxScrollRef = useRef(0);
 
     // Command palette
     const [showPalette, setShowPalette] = useState(false);
@@ -178,9 +180,22 @@ function WatcherApp(props: AppProps) {
     useEffect(() => {
         const handleMouse = (btn: number, mx: number, my: number) => {
             if (btn === 64) {
-                setScrollOffset(prev => Math.max(0, prev - 3)); // wheel up
+                // wheel up — switch to manual scrolling
+                if (autoScrollRef.current) {
+                    autoScrollRef.current = false;
+                    setScrollOffset(Math.max(0, maxScrollRef.current - 3));
+                } else {
+                    setScrollOffset(prev => Math.max(0, prev - 3));
+                }
             } else if (btn === 65) {
-                setScrollOffset(prev => prev + 3);              // wheel down
+                // wheel down — re-enable autoScroll if we hit the bottom
+                setScrollOffset(prev => {
+                    const next = prev + 3;
+                    if (next >= maxScrollRef.current) {
+                        autoScrollRef.current = true;
+                    }
+                    return next;
+                });
             } else if (btn === 0) {
                 handlePaletteClickRef.current(mx, my);          // left click
             }
@@ -475,6 +490,7 @@ To call a tool, include this exact syntax on its own line in your response:
             props.session.clear();
             setMessages([]);
             setScrollOffset(0);
+            autoScrollRef.current = true;
             return true;
         }
 
@@ -884,6 +900,18 @@ To call a tool, include this exact syntax on its own line in your response:
         return false;
     }, [props, exit, getSystemPrompt, watchEnabled]);
 
+    // ─── Auto-name session ───
+    const autoNameSession = useCallback((userText: string, assistantText: string) => {
+        // Generate a short name from the user's first message
+        const words = userText.trim().split(/\s+/).slice(0, 6);
+        let name = words.join(' ');
+        if (name.length > 40) name = name.substring(0, 37) + '...';
+        if (name.length < 3) name = 'Chat session';
+        // Capitalize first letter
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        props.session.setSessionName(name);
+    }, [props.session]);
+
     // ─── Handle submit ───
     const handleSubmit = useCallback(async (text: string) => {
         // If the palette already intercepted this Enter, skip
@@ -904,7 +932,7 @@ To call a tool, include this exact syntax on its own line in your response:
         setMessages(prev => [...prev, { role: 'user', content: text, timestamp: Date.now() }]);
         props.session.addUserMessage(text);
         setIsThinking(true);
-        setScrollOffset(Number.MAX_SAFE_INTEGER); // auto-scroll to bottom (clamped by ChatView)
+        autoScrollRef.current = true;
 
         const abortController = new AbortController();
         abortControllerRef.current = abortController;
@@ -989,7 +1017,6 @@ To call a tool, include this exact syntax on its own line in your response:
                 metadata: `${configRef.current.aiProvider}/${configRef.current.model} · ${elapsed}s`,
                 timestamp: Date.now(),
             }]);
-            setScrollOffset(Number.MAX_SAFE_INTEGER); // show newest message
         } catch (error: any) {
             setIsThinking(false);
             if (error.name === 'AbortError') {
@@ -1003,19 +1030,8 @@ To call a tool, include this exact syntax on its own line in your response:
                 timestamp: Date.now(),
             }]);
         }
-    }, [handleCommand, getSystemPrompt, props, messages, executeToolForAI]);
+    }, [handleCommand, getSystemPrompt, props, messages, executeToolForAI, autoNameSession]);
 
-    // ─── Auto-name session ───
-    const autoNameSession = useCallback((userText: string, assistantText: string) => {
-        // Generate a short name from the user's first message
-        const words = userText.trim().split(/\s+/).slice(0, 6);
-        let name = words.join(' ');
-        if (name.length > 40) name = name.substring(0, 37) + '...';
-        if (name.length < 3) name = 'Chat session';
-        // Capitalize first letter
-        name = name.charAt(0).toUpperCase() + name.slice(1);
-        props.session.setSessionName(name);
-    }, [props.session]);
 
     // ─── Keyboard shortcuts ───
 
@@ -1095,6 +1111,7 @@ To call a tool, include this exact syntax on its own line in your response:
             props.session.clear();
             setMessages([]);
             setScrollOffset(0);
+            autoScrollRef.current = true;
             return;
         }
 
@@ -1129,22 +1146,44 @@ To call a tool, include this exact syntax on its own line in your response:
 
         // PageUp / PageDown for scrolling
         if (key.pageUp) {
-            setScrollOffset(prev => Math.max(0, prev - 10));
+            if (autoScrollRef.current) {
+                autoScrollRef.current = false;
+                setScrollOffset(Math.max(0, maxScrollRef.current - 10));
+            } else {
+                setScrollOffset(prev => Math.max(0, prev - 10));
+            }
             return;
         }
         if (key.pageDown) {
-            setScrollOffset(prev => prev + 10);
+            setScrollOffset(prev => {
+                const next = prev + 10;
+                if (next >= maxScrollRef.current) {
+                    autoScrollRef.current = true;
+                }
+                return next;
+            });
             return;
         }
 
         // UpArrow / DownArrow for scrolling (when not in palette)
         if (!showPalette) {
             if (key.upArrow) {
-                setScrollOffset(prev => Math.max(0, prev - 1));
+                if (autoScrollRef.current) {
+                    autoScrollRef.current = false;
+                    setScrollOffset(Math.max(0, maxScrollRef.current - 1));
+                } else {
+                    setScrollOffset(prev => Math.max(0, prev - 1));
+                }
                 return;
             }
             if (key.downArrow) {
-                setScrollOffset(prev => prev + 1);
+                setScrollOffset(prev => {
+                    const next = prev + 1;
+                    if (next >= maxScrollRef.current) {
+                        autoScrollRef.current = true;
+                    }
+                    return next;
+                });
                 return;
             }
         }
@@ -1200,6 +1239,8 @@ To call a tool, include this exact syntax on its own line in your response:
                             height={chatHeight}
                             width={Math.floor(cols * 0.7)}
                             scrollOffset={scrollOffset}
+                            autoScroll={autoScrollRef.current}
+                            onMaxScrollChange={(ms) => { maxScrollRef.current = ms; }}
                         />
                     )}
 

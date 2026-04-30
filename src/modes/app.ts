@@ -1,4 +1,4 @@
-﻿import { AIProviderFactory } from '../ai/AIProviderFactory';
+import { AIProviderFactory } from '../ai/AIProviderFactory';
 import { CredentialManager } from '../credentials/CredentialManager';
 import { ConfigManager } from '../config/ConfigManager';
 import { WatcherDatabase } from '../database/Database';
@@ -152,27 +152,29 @@ ${tools.getToolDescriptions()}`;
     process.stdin.on('data', mouseHandler);
 
     // --- Launch Ink TUI ---
-    await renderApp({
-        config,
-        projectPath,
-        aiProvider,
-        session,
-        tools,
-        gitService,
-        db,
-        analyzer,
-        progressGen,
-        changelogGen,
-        configManager,
-        credentialManager,
-        scrollBus,
-    });
-
-    // Cleanup mouse after TUI exits
-    clearInterval(flowInterval);
-    process.stdin.off('data', mouseHandler);
-    process.stdout.write('\x1b[?1006l');
-    process.stdout.write('\x1b[?1000l');
+    try {
+        await renderApp({
+            config,
+            projectPath,
+            aiProvider,
+            session,
+            tools,
+            gitService,
+            db,
+            analyzer,
+            progressGen,
+            changelogGen,
+            configManager,
+            credentialManager,
+            scrollBus,
+        });
+    } finally {
+        // Cleanup mouse after TUI exits (always runs, even on crash)
+        clearInterval(flowInterval);
+        process.stdin.off('data', mouseHandler);
+        process.stdout.write('\x1b[?1006l');
+        process.stdout.write('\x1b[?1000l');
+    }
 
     // After TUI exits
     console.log(session.getUsageSummary());

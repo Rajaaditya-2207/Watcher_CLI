@@ -1,5 +1,5 @@
 export interface WatcherConfig {
-  aiProvider: 'openrouter' | 'bedrock' | 'groq';
+  aiProvider: 'anthropic' | 'gemini' | 'openai' | 'ollama' | 'lmstudio' | 'llamacpp' | 'openrouter' | 'bedrock' | 'groq';
   model: string;
   keyAlias?: string;
   watchInterval: number;
